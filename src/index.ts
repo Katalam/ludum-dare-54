@@ -1,7 +1,8 @@
 import { Application, Graphics } from "pixi.js"
 import { Clock } from "./clock";
 import { Scheduler } from "./scheduler";
-import { Parcel, ParcelInput, Stacks } from "./stacks";
+import { ParcelInput, Stacks } from "./stacks";
+import { Parcel } from "./parcel";
 import { Output } from "./output";
 import { ScoreBoard as Scoreboard } from "./scoreboard";
 import { Destination } from "./destination";
