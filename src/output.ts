@@ -1,5 +1,5 @@
 import { Destination } from './destination';
-import { Graphics, Text } from 'pixi.js';
+import { FederatedPointerEvent, Graphics, Text } from 'pixi.js';
 import { app } from './index';
 
 export class Output extends Graphics {
@@ -12,10 +12,19 @@ export class Output extends Graphics {
     private lightbulb: Graphics | undefined;
     private text: Text | undefined;
 
+    private onOutputSelectListener: ((output: Output) => void) | undefined;
+
     constructor(destination?: Destination) {
         super();
 
         this.destination = destination;
+
+        this.eventMode = 'static';
+        this.cursor = 'pointer';
+
+        this.on('pointerdown', (interactionEvent: FederatedPointerEvent) => {
+            this.onOutputSelectListener?.(this);
+        })
     }
 
     public isOccupied(): boolean {
@@ -84,5 +93,16 @@ export class Output extends Graphics {
 
         this.addChild(this.lightbulb);
         this.addChild(this.text);
+    }
+
+    /**
+     * Handles the pointer down event.
+     * If the output is occupied, the parcel is right, it will be removed.
+     * If the output is occupied, the parcel is wrong, it will do nothing.
+     * If the output is not occupied, it will do nothing.
+     */
+
+    public setOnOutputSelectListener(listener: (output: Output) => void): void {
+        this.onOutputSelectListener = listener;
     }
 }

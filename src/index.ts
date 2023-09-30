@@ -53,8 +53,10 @@ class Stage extends Graphics {
     private stacks: Stacks;
     private clock: Clock;
     private scheduler: Scheduler;
-    private outputs: Output[] = [];
     private scoreboard: Scoreboard;
+    private outputs: Output[] = [];
+
+    private static readonly AMOUNT_OF_OUTPUTS = 3;
 
     private selectedParcel: Parcel | undefined;
     private timeUntilNextParcelSpawn = 1.0;
@@ -80,10 +82,40 @@ class Stage extends Graphics {
         this.addChild(this.scheduler);
         this.scheduler.setOnTimeReachedListener((destination: Destination) => this.onScheduledTimeReached(destination));
 
-        this.outputs.push(new Output());
-        this.outputs.forEach((output) => this.addChild(output));
         this.scoreboard = new Scoreboard();
         this.addChild(this.scoreboard);
+
+        this.spawnOutputs();
+    }
+
+    private spawnOutputs() {
+        for (let i = 0; i < Stage.AMOUNT_OF_OUTPUTS; i++) {
+            const output = new Output();
+            output.setOnOutputSelectListener((output: Output) => {
+                if (!output.getDestination()) {
+                    return;
+                }
+
+                const parcel = this.selectedParcel;
+                if (!parcel) {
+                    return;
+                }
+
+                if (parcel.getColor() === output.getDestination()?.getColor() || true) {
+                    const parcelOrigin = parcel.getLocation();
+                    if (!parcelOrigin) {
+                        this.parcelInput.despawnParcel();
+                    } else {
+                        this.stacks.removeParcelFromStack(parcelOrigin);
+                    }
+                    this.selectedParcel?.destroy();
+                    this.selectedParcel = undefined;
+                }
+            })
+            this.outputs.push(output);
+            this.outputs.forEach((output) => this.addChild(output));
+            this.outputs.forEach((output) => output.setDestination(Destination.getRandomDestination()));
+        }
     }
 
     private spawnParcel(): void {
