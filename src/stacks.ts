@@ -1,5 +1,6 @@
-import { FederatedPointerEvent, Graphics, Rectangle } from "pixi.js";
+import { FederatedPointerEvent, Graphics, Rectangle, Text } from "pixi.js";
 import { ColoredShape } from "./shape";
+import { Destination } from "./destination";
 
 export class Parcel extends ColoredShape<Rectangle> {
 
@@ -10,13 +11,28 @@ export class Parcel extends ColoredShape<Rectangle> {
     private location: number | undefined;
     private onTopOfStack = false;
 
-    constructor(color: number) {
-        super(new Rectangle(0, 0, Parcel.PARCEL_WIDTH, Parcel.PARCEL_HEIGHT), color);
+    private destination: Destination;
+
+    constructor(destination: Destination) {
+        super(new Rectangle(0, 0, Parcel.PARCEL_WIDTH, Parcel.PARCEL_HEIGHT), destination.getColor());
+        this.destination = destination;
         this.eventMode = 'static';
         this.cursor = 'pointer';
         // this.lineStyle(2, 0x000000);
 
         this.on("pointerdown", (interactionEvent: FederatedPointerEvent) => this.onPointerDown(interactionEvent));
+
+        this.drawText();
+    }
+
+    private drawText(): void {
+        const text = new Text(this.destination.destination, {
+
+        });
+        text.x = this.width / 2 - text.width / 2;
+        text.y = this.height / 2 - text.height / 2;
+
+        this.addChild(text);
     }
 
     private onPointerDown(interactionEvent: FederatedPointerEvent) {

@@ -130,7 +130,7 @@ class Stage extends Graphics {
     }
 
     private spawnParcel(): void {
-        const parcel = new Parcel(Math.random() * 0xFFFFFF);
+        const parcel = new Parcel(Destination.getRandomDestination());
         parcel.setOnParcelSelectListener((parcel: Parcel) => this.onParcelSelected(parcel));
         this.parcelInput.spawnParcel(parcel);
         this.timeUntilNextParcelSpawn = Stage.PARCEL_SPAWN_TIME;
