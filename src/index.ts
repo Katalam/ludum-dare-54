@@ -4,8 +4,6 @@ import { Scheduler } from "./scheduler";
 import { Parcel, ParcelInput, Stacks } from "./stacks";
 
 let stage: Stage;
-let clock: Clock;
-let scheduler: Scheduler;
 
 export const maxTime: number = 300;
 
@@ -35,14 +33,6 @@ function setupAndStart(): void {
     // multiplying by 1/60 transforms this in seconds since last call
     const MOVEMENT_FACTOR = 1.0 / 60.0;
     app.ticker.add((delta: number) => gameLoop(delta * MOVEMENT_FACTOR));
-
-    // add a clock to the stage
-    clock = new Clock();
-    app.stage.addChild(clock)
-
-    // add the scheduler to the stage
-    scheduler = new Scheduler();
-    app.stage.addChild(scheduler);
 }
 
 /**
@@ -55,6 +45,8 @@ class Stage extends Graphics {
 
     private parcelInput: ParcelInput;
     private stacks: Stacks;
+    private clock: Clock;
+    private scheduler: Scheduler;
 
     private selectedParcel: Parcel | undefined;
 
@@ -75,11 +67,17 @@ class Stage extends Graphics {
         const parcel = new Parcel(Math.random() * 0xFFFFFF);
         parcel.setOnParcelSelectListener((p: Parcel) => this.onParcelSelected(p));
         this.parcelInput.spawnParcel(parcel);
+
+        this.clock = new Clock();
+        this.addChild(this.clock)
+
+        this.scheduler = new Scheduler();
+        this.addChild(this.scheduler);
     }
 
     public update(delta: number) {
-        clock.addDeltaTime(delta);
-        scheduler.addDeltaTime(delta);
+        this.clock.addDeltaTime(delta);
+        this.scheduler.addDeltaTime(delta);
         this.parcelInput.update(delta);
 
         if (!this.parcelInput.hasParcel()) {
