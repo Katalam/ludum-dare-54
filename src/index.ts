@@ -65,14 +65,11 @@ class Stage extends Graphics {
         super();
 
         this.stacks = new Stacks();
-        this.stacks.x = 400;
-        this.stacks.y = 500;
         this.addChild(this.stacks);
 
         this.stacks.setOnSelectListener((stackId: number) => this.onStackSelected(stackId));
 
         this.parcelInput = new ParcelInput();
-        this.parcelInput.y = 700;
         this.addChild(this.parcelInput);
 
         this.clock = new Clock();
@@ -86,6 +83,7 @@ class Stage extends Graphics {
         this.addChild(this.scoreboard);
 
         this.spawnOutputs();
+        this.layoutChilds();
     }
 
     private spawnOutputs() {
@@ -140,10 +138,18 @@ class Stage extends Graphics {
         this.outputs.find(output => !output.isOccupied())?.setDestination(destination);
     }
 
+    private layoutChilds(): void {
+        this.parcelInput.y = app.screen.height - 50;
+        this.stacks.x = (app.screen.width - Stacks.STACKS * (Stacks.STACK_WIDTH + 20) + 20) / 2;
+        this.stacks.y = app.screen.height - 100;
+    }
+
     public update(delta: number) {
+        this.layoutChilds();
+
+        this.parcelInput.update(delta);
         this.clock.update(delta);
         this.scheduler.update(delta);
-        this.parcelInput.update(delta);
         this.outputs.forEach((output) => output.updateDeltaTime(delta));
 
         this.timeUntilNextParcelSpawn -= delta;
