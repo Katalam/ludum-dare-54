@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "description": "Starter code for a platformer using PixiJS",
   "private": true,
-  "author": "Lito 'Sinus' Goldmann",
+  "authors" : [
+    "Lito 'Sinus' Goldmann",
+    "Katalam"
+  ],
   "license": "MIT",
   "scripts": {
     "build_prod": "webpack",

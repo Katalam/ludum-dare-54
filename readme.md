@@ -1,13 +1,11 @@
-# Platformer Starter for PixiJS
+# Parcel Mover
 
-This project contains basic starter code for games using [TypeScript](https://www.typescriptlang.org/)
-with [PixiJS](https://pixijs.com/) and some additional code for an examplary platformer.
-It aims to simplify starting a new project and accelerate their development.
+This project is a parcel moving game using [TypeScript](https://www.typescriptlang.org/)
+with [PixiJS](https://pixijs.com/).
 
 This project uses [Webpack](https://webpack.js.org/) to bundle source code, dependencies and assets,
 both during development and for a production-ready build. It uses [ESLint](https://eslint.org/) and its
 TypeScript-plugin [typescript-eslint](https://typescript-eslint.io/) to lint and improve the source code.
-
 
 ## Getting started
 
