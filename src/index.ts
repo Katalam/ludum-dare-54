@@ -108,7 +108,7 @@ class Stage extends Graphics {
                     return;
                 }
 
-                if (parcel.getColor() === output.getDestination()?.getColor()) {
+                if (parcel.hasSameDestination(output.getDestination()!)) {
                     this.despawnParcel(parcel);
                     this.selectedParcel?.destroy();
                     this.selectedParcel = undefined;

@@ -62,6 +62,10 @@ export class Parcel extends ColoredShape<Rectangle> {
     public isOnTopOfStack(): boolean {
         return this.onTopOfStack;
     }
+
+    public hasSameDestination(destination: Destination): boolean {
+        return this.destination.destination === destination.destination;
+    }
 }
 
 export class ParcelInput extends Graphics {
