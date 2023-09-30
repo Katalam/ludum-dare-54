@@ -35,4 +35,8 @@ export class ScoreBoard extends Container {
         this.score = score;
         this.textScore.text = this.scoreString();
     }
+
+    public getScore(): number {
+        return this.score;
+    }
 }

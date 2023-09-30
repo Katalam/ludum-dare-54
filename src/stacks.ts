@@ -70,6 +70,8 @@ export class Stacks extends Graphics {
 
     private parcelStacks: Parcel[][];
 
+    private stacks: ColoredShape<Rectangle>[];
+
     private onStackSelectListener: OnStackSelectListener | undefined;
 
     constructor() {
@@ -80,13 +82,20 @@ export class Stacks extends Graphics {
             this.parcelStacks.push([]);
         }
 
+        this.stacks = [];
         for (let i = 0; i < Stacks.STACKS; i++) {
-            const stack = new ColoredShape(new Rectangle(i * (Stacks.STACK_WIDTH + 20), 0, Stacks.STACK_WIDTH, 40), 0xFF000);
-            stack.eventMode = 'static';
-            stack.cursor = 'pointer';
+            const stack = new ColoredShape<Rectangle>(new Rectangle(i * (Stacks.STACK_WIDTH + 20), 0, Stacks.STACK_WIDTH, 40), 0xFF000);
             stack.on("pointerdown", (interactionEvent: FederatedPointerEvent) => this.onPointerDown(interactionEvent, i));
+            this.stacks.push(stack);
             this.addChild(stack);
         }
+    }
+
+    public setInteractive(isInteractive: boolean): void {
+        this.stacks.forEach(stack => {
+            stack.eventMode = isInteractive ? "static" : "passive";
+            stack.cursor = isInteractive ? "pointer" : "initial";
+        })
     }
 
     private onPointerDown(interactionEvent: FederatedPointerEvent, stackId: number) {
@@ -99,7 +108,6 @@ export class Stacks extends Graphics {
     }
 
     public placeParcelOnStack(parcel: Parcel, stackId: number): void {
-        console.log("placeParcelOnStack(...,", stackId, ")");
         if (stackId < 0 || stackId >= Stacks.STACKS) {
             throw new RangeError();
         }
@@ -118,7 +126,6 @@ export class Stacks extends Graphics {
     }
 
     public removeParcelFromStack(stackId: number) {
-        console.log("removeParcelFromStack(", stackId, ")");
         if (stackId < 0 || stackId >= Stacks.STACKS) {
             throw new RangeError();
         }

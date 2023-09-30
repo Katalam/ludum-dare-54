@@ -30,8 +30,12 @@ export class Output extends Graphics {
         this.addChild(this.text);
         this.drawLightbulb();
 
-        this.eventMode = 'static';
         this.on('pointerdown', () => this.onOutputSelectListener?.(this))
+    }
+
+    public setInteractive(isInteractive: boolean): void {
+        this.eventMode = isInteractive ? 'static' : 'passive';
+        this.cursor = isInteractive && this.destination !== undefined ? 'pointer' : 'inital';
     }
 
     public isOccupied(): boolean {

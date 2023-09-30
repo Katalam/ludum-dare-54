@@ -1,4 +1,4 @@
-import { Application, Graphics, Sprite, Texture, TilingSprite } from "pixi.js"
+import { Application, Graphics, Texture, TilingSprite } from "pixi.js"
 import { Clock } from "./clock";
 import { Scheduler } from "./scheduler";
 import { ParcelInput, Stacks } from "./stacks";
@@ -6,8 +6,10 @@ import { Parcel } from "./parcel";
 import { Output } from "./output";
 import { ScoreBoard as Scoreboard } from "./scoreboard";
 import { Destination } from "./destination";
+import { Menu } from "./menu";
 
 let stage: Stage;
+export let gameState: "menu" | "running" | "gameover" = "menu";
 
 // Get the HTML wrapper element, start up a pixi.js application and add its canvas element to the wrapper.
 const wrapper = document.getElementById("wrapper");
@@ -55,6 +57,7 @@ class Stage extends Graphics {
     private clock: Clock;
     private scheduler: Scheduler;
     private scoreboard: Scoreboard;
+    private menu: Menu;
     private outputs: Output[] = [];
 
     private static readonly AMOUNT_OF_OUTPUTS = 3;
@@ -72,29 +75,50 @@ class Stage extends Graphics {
         // Add the background to the stage
         app.stage.addChild(background);
 
-        this.stacks = new Stacks();
-        this.addChild(this.stacks);
+        this.menu = new Menu(() => this.restart());
+        this.addChild(this.menu);
 
+        this.stacks = new Stacks();
         this.stacks.setOnSelectListener((stackId: number) => this.onStackSelected(stackId));
+        this.addChild(this.stacks);
 
         this.parcelInput = new ParcelInput();
         this.addChild(this.parcelInput);
 
         this.clock = new Clock(Stage.DEADLINE);
+        this.clock.visible = false;
         this.addChild(this.clock)
 
         this.scheduler = new Scheduler();
         this.addChild(this.scheduler);
         this.scheduler.x = 20;
         this.scheduler.y = 20;
+        this.scheduler.visible = false;
         this.scheduler.setOnTimeReachedListener((destination: Destination) => this.onScheduledTimeReached(destination));
 
         this.scoreboard = new Scoreboard();
+        this.scoreboard.visible = false;
         this.addChild(this.scoreboard);
         this.scoreboard.y = 10;
 
         this.spawnOutputs();
         this.layoutChilds();
+
+        this.sortChildren();
+    }
+
+    private restart(): void {
+        gameState = "running";
+
+        this.menu.visible = false;
+
+        this.clock.visible = true;
+        this.scheduler.visible = true;
+        this.scoreboard.visible = true;
+        this.stacks.setInteractive(true);
+        this.outputs.forEach(output => output.setInteractive(true));
+
+        // TODO reset game state
     }
 
     private spawnOutputs() {
@@ -165,26 +189,29 @@ class Stage extends Graphics {
     public update(delta: number) {
         this.layoutChilds();
 
-        this.parcelInput.update(delta);
-        this.clock.update(delta);
-        this.scheduler.update(delta);
-        this.outputs.forEach((output) => output.updateDeltaTime(delta));
+        if (gameState === "running") {
+            this.parcelInput.update(delta);
+            this.clock.update(delta);
+            this.scheduler.update(delta);
+            this.outputs.forEach((output) => output.updateDeltaTime(delta));
 
-        this.timeUntilNextParcelSpawn -= delta;
+            this.timeUntilNextParcelSpawn -= delta;
 
-        if (!this.parcelInput.hasParcel() && this.timeUntilNextParcelSpawn <= 0.0) {
-            this.spawnParcel();
-        }
+            if (!this.parcelInput.hasParcel() && this.timeUntilNextParcelSpawn <= 0.0) {
+                this.spawnParcel();
+            }
 
-        if (this.scheduler.getEntries().length < Stage.MAX_SCHEDULED_OUTPUT_TASKS) {
-            const longestTime = this.scheduler.getEntries().length > 0 ? Math.max(...this.scheduler.getEntries().map((item) => item.getTimeUntilArrival())) : 0;
-            const time = longestTime + Scheduler.MIN_VALUE_NEXT_TIME + Math.floor(Math.random() * Scheduler.MIN_VALUE_NEXT_TIME);
+            if (this.scheduler.getEntries().length < Stage.MAX_SCHEDULED_OUTPUT_TASKS) {
+                const longestTime = this.scheduler.getEntries().length > 0 ? Math.max(...this.scheduler.getEntries().map((item) => item.getTimeUntilArrival())) : 0;
+                const time = longestTime + Scheduler.MIN_VALUE_NEXT_TIME + Math.floor(Math.random() * Scheduler.MIN_VALUE_NEXT_TIME);
 
-            this.scheduler.addEntry(time, Destination.getRandomDestination())
-        }
+                this.scheduler.addEntry(time, Destination.getRandomDestination())
+            }
 
-        if (this.clock.getTimeLeft() <= 0.0) {
-            console.log("Round complete.") // TODO
+            if (this.clock.getTimeLeft() <= 0.0) {
+                this.menu.displayLost(this.scoreboard.getScore());
+                this.menu.visible = true;
+            }
         }
     }
 
