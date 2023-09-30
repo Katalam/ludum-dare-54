@@ -1,8 +1,12 @@
 import { Application, IShape, Graphics } from "pixi.js"
 import { Clock } from "./clock";
+import { Scheduler } from "./scheduler";
 
 let stage: Stage;
 let clock: Clock;
+let scheduler: Scheduler;
+
+export const maxTime: number = 300;
 
 // Get the HTML wrapper element, start up a pixi.js application and add its canvas element to the wrapper.
 const wrapper = document.getElementById("wrapper");
@@ -32,8 +36,12 @@ function setupAndStart(): void {
     app.ticker.add((delta: number) => gameLoop(delta * MOVEMENT_FACTOR));
 
     // add a clock to the stage
-    clock = new Clock(10);
+    clock = new Clock();
     app.stage.addChild(clock)
+
+	// add the scheduler to the stage
+	scheduler = new Scheduler();
+	app.stage.addChild(scheduler);
 }
 
 /**
@@ -50,6 +58,7 @@ class Stage extends Graphics {
 
     public update(delta: number) {
         clock.addDeltaTime(delta);
+        scheduler.addDeltaTime(delta);
     }
 }
 

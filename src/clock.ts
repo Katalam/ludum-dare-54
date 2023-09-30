@@ -1,8 +1,7 @@
 import {Graphics, Text} from "pixi.js";
-import {app} from "./index";
+import {app, maxTime} from "./index";
 
 export class Clock extends Graphics {
-    private readonly FRAMES_PER_SECOND: number = 60;
     private time: number;
 
     private readonly WIDTH: number = 200;
@@ -13,7 +12,7 @@ export class Clock extends Graphics {
 
     private text: Text | undefined;
 
-    constructor(maxTime: number) {
+    constructor() {
         super();
 
         this.time = maxTime;
