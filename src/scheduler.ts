@@ -68,26 +68,16 @@ export class Scheduler extends Graphics {
             }
         });
 
-        this.list = this.list.filter((item: ListItem) => {
-            return item.time > 0;
-        });
+        this.list = this.list.filter((item: ListItem) => item.time > 0);
 
         if (this.list.length < 3) {
-            // get longest time
-            let longestTime = 0;
-            this.list.forEach((item: ListItem) => {
-                if (item.time > longestTime) {
-                    longestTime = item.time;
-                }
-            });
+            const longestTime = this.list.length > 0 ? Math.max(...this.list.map((item) => item.time)) : 0;
 
             this.addToList(longestTime);
         }
 
-        this.list.sort((item: ListItem) => {
-            return item.time;
-        }).forEach((item: ListItem, index: number) => {
-            item.y = this.OFFSET_Y + (index * 40);
+        this.list.sort((a, b) => b.time - a.time).forEach((item, index) => {
+            item.y = this.OFFSET_Y + index * 40;
         });
     }
 
