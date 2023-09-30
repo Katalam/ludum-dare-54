@@ -1,16 +1,17 @@
 import { Destination } from './destination';
 import { Graphics, Text } from 'pixi.js';
-import { app } from './index';
+import { Parcel } from './parcel';
 
 export class Output extends Graphics {
+
     private static readonly EXIT_TIME_IN_SECONDS: number = 5;
 
     private destination: Destination | undefined;
     private time: number = 0;
     private startTime: number = 0;
 
-    private lightbulb: Graphics | undefined;
-    private text: Text | undefined;
+    private lightbulb: Graphics;
+    private text: Text;
 
     private onOutputSelectListener: ((output: Output) => void) | undefined;
 
@@ -19,8 +20,17 @@ export class Output extends Graphics {
 
         this.destination = destination;
 
+        this.beginFill(0xFF000);
+        this.drawRect(0, 0, Parcel.PARCEL_WIDTH + 60, 40);
+        this.endFill();
+
+        this.lightbulb = new Graphics();
+        this.text = new Text(undefined, { fill: 0xf, fontSize: 20 });
+        this.addChild(this.lightbulb);
+        this.addChild(this.text);
+        this.drawLightbulb();
+
         this.eventMode = 'static';
-        this.cursor = 'pointer';
         this.on('pointerdown', () => this.onOutputSelectListener?.(this))
     }
 
@@ -39,6 +49,7 @@ export class Output extends Graphics {
      */
     public setDestination(destination: Destination): void {
         this.destination = destination;
+        this.cursor = "pointer";
         this.startTime = this.time;
 
         this.drawLightbulb();
@@ -60,36 +71,33 @@ export class Output extends Graphics {
         }
     }
 
-    private clearDestination(): void {
+    public clearDestination(): void {
         this.destination = undefined;
-
+        this.cursor = "initial";
         this.startTime = 0;
-
-        this.text?.destroy();
-        this.lightbulb?.destroy();
-        this.text = undefined;
-        this.lightbulb = undefined;
+        this.drawLightbulb();
     }
 
     private drawLightbulb(): void {
         if (this.destination === undefined) {
+            this.text.visible = false;
+            this.lightbulb.visible = false;
             return;
         }
 
-        const x = app.screen.width - 100;
-        const y = app.screen.height - 200;
+        this.text.visible = true;
+        this.lightbulb.visible = true;
 
-        this.lightbulb = new Graphics();
         this.lightbulb.beginFill(this.destination.getColor());
-        this.lightbulb.drawCircle(x, y, 20);
+        this.lightbulb.drawCircle(0, 0, 40);
         this.lightbulb.endFill();
+        this.lightbulb.x = (Parcel.PARCEL_WIDTH + 60) / 2;
+        this.lightbulb.y = 20;
 
-        this.text = new Text(this.destination.destination, { fill: 0xf, fontSize: 20 });
-        this.text.x = x - this.lightbulb.width / 2 + this.text.width / 4;
-        this.text.y = y - this.lightbulb.height / 2 + this.text.width / 5;
-
-        this.addChild(this.lightbulb);
-        this.addChild(this.text);
+        this.text.text = this.destination.destination;
+        this.text.updateText(true);
+        this.text.x = -this.text.width / 2 + (Parcel.PARCEL_WIDTH + 60) / 2;
+        this.text.y = -this.text.height / 2 + 20;
     }
 
     public setOnOutputSelectListener(listener: (output: Output) => void): void {

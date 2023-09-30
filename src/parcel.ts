@@ -1,4 +1,4 @@
-import { FederatedPointerEvent, Graphics, Rectangle, Text } from "pixi.js";
+import { FederatedPointerEvent, Rectangle, Text } from "pixi.js";
 import { ColoredShape } from "./shape";
 import { Destination } from "./destination";
 

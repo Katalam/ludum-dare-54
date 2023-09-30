@@ -19,8 +19,6 @@ export class ScoreBoard extends Container {
         super();
 
         this.textScore = new Text(this.scoreString(), ScoreBoard.TEXT_STYLE);
-        this.textScore.x = 900;
-        this.textScore.y = 10;
         this.addChild(this.textScore);
     }
 

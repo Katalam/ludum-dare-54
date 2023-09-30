@@ -9,8 +9,6 @@ import { Destination } from "./destination";
 
 let stage: Stage;
 
-export const maxTime: number = 300;
-
 // Get the HTML wrapper element, start up a pixi.js application and add its canvas element to the wrapper.
 const wrapper = document.getElementById("wrapper");
 export const app = new Application<HTMLCanvasElement>({ antialias: true, backgroundColor: 0x66ffff, resizeTo: wrapper !== null ? wrapper : window });
@@ -49,6 +47,7 @@ class Stage extends Graphics {
 
     private static readonly PARCEL_SPAWN_TIME = 2.0;
     private static readonly MAX_SCHEDULED_OUTPUT_TASKS = 3;
+    private static readonly DEADLINE = 300;
 
     private parcelInput: ParcelInput;
     private stacks: Stacks;
@@ -73,15 +72,18 @@ class Stage extends Graphics {
         this.parcelInput = new ParcelInput();
         this.addChild(this.parcelInput);
 
-        this.clock = new Clock();
+        this.clock = new Clock(Stage.DEADLINE);
         this.addChild(this.clock)
 
         this.scheduler = new Scheduler();
         this.addChild(this.scheduler);
+        this.scheduler.x = 20;
+        this.scheduler.y = 20;
         this.scheduler.setOnTimeReachedListener((destination: Destination) => this.onScheduledTimeReached(destination));
 
         this.scoreboard = new Scoreboard();
         this.addChild(this.scoreboard);
+        this.scoreboard.y = 10;
 
         this.spawnOutputs();
         this.layoutChilds();
@@ -144,6 +146,12 @@ class Stage extends Graphics {
         this.parcelInput.y = app.screen.height - 50;
         this.stacks.x = (app.screen.width - Stacks.STACKS * (Stacks.STACK_WIDTH + 20) + 20) / 2;
         this.stacks.y = app.screen.height - 100;
+        this.scoreboard.x = app.screen.width - 200;
+        this.clock.x = (app.screen.width - Clock.WIDTH) / 2;
+        this.outputs.forEach((output, index) => {
+            output.x = app.screen.width - Parcel.PARCEL_WIDTH - 60;
+            output.y = app.screen.height - 50 - index * (Parcel.PARCEL_HEIGHT + 150);
+        })
     }
 
     public update(delta: number) {

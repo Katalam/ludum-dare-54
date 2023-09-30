@@ -1,12 +1,11 @@
 import { Graphics, Text } from "pixi.js";
-import { app } from "./index";
 import { Destination } from "./destination";
 
 export type TimeReachedListener = (destination: Destination) => void;
 
 export class Scheduler extends Graphics {
 
-    private static readonly WIDTH: number = 200;
+    public static readonly WIDTH: number = 240;
     private static readonly HEIGHT: number = 120;
     private static readonly OFFSET_Y: number = 10;
     private static readonly RECTANGLE_COLOR: number = 0x000000;
@@ -20,32 +19,18 @@ export class Scheduler extends Graphics {
     constructor() {
         super();
 
-        this.drawPanelRectangle();
+        this.clear();
+        this.beginFill(Scheduler.RECTANGLE_COLOR);
+        this.drawRect(0, 0, Scheduler.WIDTH, Scheduler.HEIGHT);
+        this.endFill();
+
         this.update(0.0);
     }
 
-    /**
-     * Returns the X offset for the panel rectangle.
-     */
-    private static getOffsetX(): number {
-        return (app.screen.width / 4) - (Scheduler.WIDTH / 2);
-    }
-
-    /**
-     * Draws the panel background.
-     */
-    private drawPanelRectangle(): void {
-        this.clear();
-        this.beginFill(Scheduler.RECTANGLE_COLOR);
-        this.drawRect(Scheduler.getOffsetX(), Scheduler.OFFSET_Y, Scheduler.WIDTH, Scheduler.HEIGHT);
-        this.endFill();
-    }
-
     public addEntry(timeUntilArrival: number, destination: Destination): void {
-        const rectangle = new Entry(timeUntilArrival, Scheduler.getOffsetX(), Scheduler.OFFSET_Y, Scheduler.WIDTH, 30, destination);
-
-        this.entries.push(rectangle);
-        this.addChild(rectangle);
+        const entry = new Entry(timeUntilArrival, destination);
+        this.entries.push(entry);
+        this.addChild(entry);
     }
 
     public getEntries(): Entry[] {
@@ -85,62 +70,34 @@ export class Scheduler extends Graphics {
 
 class Entry extends Graphics {
 
+    public static readonly HEIGHT = 30;
+
     private destination: Destination;
-    private time: number = 0;
+    private time: number;
+    private textTime: Text;
 
-    private fixedX: number = 0;
-    private fixedY: number = 0;
-    private fixedWidth: number = 0;
-    private fixedHeight: number = 0;
-
-    private text: Text | undefined;
-
-    constructor(time: number, x: number, y: number, width: number, height: number, destination: Destination) {
+    constructor(time: number, destination: Destination) {
         super();
 
         this.time = time;
         this.destination = destination;
 
-        this.fixedX = x;
-        this.fixedY = y;
-        this.fixedWidth = width;
-        this.fixedHeight = height;
-
-        this.drawListItem();
-    }
-
-    private drawListItem(): this {
-        this.clear();
         this.beginFill(this.destination.getColor());
-        this.drawRect(this.fixedX, this.fixedY, this.fixedWidth, this.fixedHeight);
+        this.drawRect(0, 0, Scheduler.WIDTH, Entry.HEIGHT);
         this.endFill();
 
-        this.drawTimeLeft();
-        this.drawDestination();
-
-        return this;
-    }
-
-    private drawDestination() {
-        const text = new Text(this.destination.getName());
-        text.x = this.fixedX + 10;
-        text.y = this.fixedY;
-
-        this.addChild(text);
-    }
-
-    private drawTimeLeft(): void {
-        this.text = new Text(this.getTextForClock(), {
+        this.textTime = new Text(this.getTextForClock(), {
             fontFamily: "Arial",
             fontSize: 25,
             fill: 0x000000,
             align: "center",
         });
+        this.addChild(this.textTime)
+        this.textTime.x = Scheduler.WIDTH - this.textTime.width - 10;
 
-        this.text.x = this.fixedX - this.text.width + this.fixedWidth - 10;
-        this.text.y = this.fixedY;
-
-        this.addChild(this.text)
+        const textDestination = new Text(this.destination.getName());
+        this.addChild(textDestination);
+        textDestination.x = 10;
     }
 
     private getTextForClock(): string {
@@ -150,10 +107,8 @@ class Entry extends Graphics {
     public update(secondsPast: number): void {
         this.time -= secondsPast;
 
-        if (this.text) {
-            this.text.text = this.getTextForClock();
-            this.text.updateText(true);
-        }
+        this.textTime.text = this.getTextForClock();
+        this.textTime.updateText(true);
     }
 
     public getTimeUntilArrival(): number {
