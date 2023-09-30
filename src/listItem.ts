@@ -1,7 +1,8 @@
 import {Graphics, Text} from "pixi.js";
+import { Destination } from "./destination";
 
 export class ListItem extends Graphics {
-    public color: string = 'red';
+    public destination: Destination;
     public time: number = 0;
 
     public fixedX: number = 0;
@@ -11,11 +12,11 @@ export class ListItem extends Graphics {
 
     private text: Text | undefined;
 
-    constructor(time: number, x: number, y: number, width: number, height: number, color: string) {
+    constructor(time: number, x: number, y: number, width: number, height: number, destination: Destination) {
         super();
 
         this.time = time;
-        this.color = color;
+        this.destination = destination;
 
         this.fixedX = x;
         this.fixedY = y;
@@ -27,13 +28,18 @@ export class ListItem extends Graphics {
 
     private drawListItem(): this {
         this.clear();
-        this.beginFill(this.convertColorToHex(this.color));
+        this.beginFill(this.destination.getColor());
         this.drawRect(this.fixedX, this.fixedY, this.fixedWidth, this.fixedHeight);
         this.endFill();
 
         this.drawTimeLeft();
+        this.drawDestination();
 
         return this;
+    }
+
+    private drawDestination() {
+        this.text = new Text(this.destination.getDestinationLong());
     }
 
     private drawTimeLeft(): void {
@@ -58,19 +64,6 @@ export class ListItem extends Graphics {
         if (this.text) {
             this.text.text = this.getTextForClock();
             this.text.updateText(true);
-        }
-    }
-
-    private convertColorToHex(color: string): number {
-        switch (color) {
-            case "red":
-                return 0xff0000;
-            case "yellow":
-                return 0xffff00;
-            case "green":
-                return 0x00ff00;
-            default:
-                return 0x000000;
         }
     }
 }

@@ -1,6 +1,7 @@
 import { Graphics, Rectangle, Text } from "pixi.js";
 import { app, maxTime } from "./index";
 import { ListItem } from "./listItem";
+import { Destination } from "./destination";
 
 export class Scheduler extends Graphics {
     private time: number;
@@ -49,7 +50,7 @@ export class Scheduler extends Graphics {
         time += minTime;
 
         // Create a new ListItem with the generated time
-        let rectangle = new ListItem(time, this.getOffsetX(), this.OFFSET_Y, this.WIDTH, 30, 'red');
+        let rectangle = new ListItem(time, this.getOffsetX(), this.OFFSET_Y, this.WIDTH, 30, Destination.getRandomDestination());
 
         // Add the ListItem to the list and to the Scheduler
         this.list.push(rectangle);
@@ -69,7 +70,7 @@ export class Scheduler extends Graphics {
 
             if (item.time <= 0) {
                 // Draw the lightbulb
-                this.drawLightbulb(item.color);
+                this.drawLightbulb(item.destination);
 
                 this.removeChild(item);
             }
@@ -96,16 +97,16 @@ export class Scheduler extends Graphics {
         }
     }
 
-    private drawLightbulb(color: string): void {
+    private drawLightbulb(destination: Destination): void {
         const x = app.screen.width - 100;
         const y = app.screen.height - 200;
 
         let lightbulb = new Graphics();
-        lightbulb.beginFill(this.convertColorToHex(color));
+        lightbulb.beginFill(destination.getColor());
         lightbulb.drawCircle(x, y, 20);
         lightbulb.endFill();
 
-        let text = new Text("NY", { fill: 0xf, fontSize: 20 });
+        let text = new Text(destination.destination, { fill: 0xf, fontSize: 20 });
         text.x = x - lightbulb.width / 2 + text.width / 4;
         text.y = y - lightbulb.height / 2 + text.width / 5;
 
@@ -116,18 +117,5 @@ export class Scheduler extends Graphics {
             this.removeChild(lightbulb);
             this.removeChild(text);
         }, 5000);
-    }
-
-    private convertColorToHex(color: string): number {
-        switch (color) {
-            case "red":
-                return 0xff0000;
-            case "yellow":
-                return 0xffff00;
-            case "green":
-                return 0x00ff00;
-            default:
-                return 0x000000;
-        }
     }
 }

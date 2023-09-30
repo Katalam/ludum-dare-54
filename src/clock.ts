@@ -76,8 +76,8 @@ export class Clock extends Graphics {
         const seconds = this.time - (minutes * 60);
 
         // Blink the character every other second
-        const currentTime = Date.now();
-        if (currentTime - this.lastBlinkTime > 1000) {
+        const currentTime = this.time;
+        if (currentTime - this.lastBlinkTime > 100) {
             this.lastBlinkTime = currentTime;
             this.blinkCharacter = this.blinkCharacter === " " ? ":" : " ";
         }
