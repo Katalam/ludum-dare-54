@@ -68,7 +68,20 @@ export class Clock extends Graphics {
         }
     }
 
+    private lastBlinkTime: number = 0;
+    private blinkCharacter: string = ":";
+
     private getTextForClock(): string {
-        return this.time.toFixed(0).toString();
+        const minutes = Math.floor(this.time / 60);
+        const seconds = this.time - (minutes * 60);
+
+        // Blink the character every other second
+        const currentTime = Date.now();
+        if (currentTime - this.lastBlinkTime > 1000) {
+            this.lastBlinkTime = currentTime;
+            this.blinkCharacter = this.blinkCharacter === " " ? ":" : " ";
+        }
+
+        return `${minutes}${this.blinkCharacter}${seconds.toFixed(0).toString().padStart(2, '0')}`;
     }
 }
