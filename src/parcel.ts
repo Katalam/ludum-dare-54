@@ -1,11 +1,11 @@
-import { FederatedPointerEvent, Rectangle, Text } from "pixi.js";
+import { FederatedPointerEvent, Rectangle, Sprite, Text, Texture } from "pixi.js";
 import { ColoredShape } from "./shape";
 import { Destination } from "./destination";
 
 export class Parcel extends ColoredShape<Rectangle> {
 
-    public static readonly PARCEL_WIDTH = 150;
-    public static readonly PARCEL_HEIGHT = 60;
+    public static readonly PARCEL_WIDTH = 80;
+    public static readonly PARCEL_HEIGHT = 48;
 
     private onParcelSelectListener: ((parcel: Parcel) => void) | undefined;
     private location: number | undefined;
@@ -22,15 +22,33 @@ export class Parcel extends ColoredShape<Rectangle> {
 
         this.on("pointerdown", (interactionEvent: FederatedPointerEvent) => this.onPointerDown(interactionEvent));
 
+        this.addBadge();
         this.drawText();
+    }
+
+    private addBadge(): void {
+        const backgroundTexture = Texture.from("assets/badge.png");
+        const background = new Sprite(backgroundTexture);
+        background.width = Parcel.PARCEL_WIDTH;
+        background.height = Parcel.PARCEL_HEIGHT;
+
+        this.addChild(background);
+
+        const colorTexture = Texture.from("assets/parcel_band.png");
+        const color = new Sprite(colorTexture);
+        color.tint = this.destination.getColor();
+        color.width = Parcel.PARCEL_WIDTH;
+        color.height = Parcel.PARCEL_HEIGHT;
+
+        this.addChild(color);
     }
 
     private drawText(): void {
         const text = new Text(this.destination.destination, {
-
+            fontSize: 18,
         });
-        text.x = this.width / 2 - text.width / 2;
-        text.y = this.height / 2 - text.height / 2;
+        text.x = this.width / 2 - text.width / 2 + 5;
+        text.y = this.height / 2 - text.height / 2 + 1;
 
         this.addChild(text);
     }
