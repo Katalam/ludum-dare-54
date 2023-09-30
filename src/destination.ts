@@ -1,12 +1,11 @@
 export class Destination {
     private static destinations = [
-        'NY',
-        'LA',
-        'SF',
-        'OH',
-        'TX',
-        'FL',
-        'NC',
+        'BER',
+        'LON',
+        'PAR',
+        'MAD',
+        'ROM',
+        'LIS',
     ];
 
     static getRandomDestination(): Destination {
@@ -23,41 +22,37 @@ export class Destination {
 
     public getColor(): number {
         switch (this.destination) {
-            case 'NY':
-                return 0x009933;
-            case 'LA':
-                return 0x00cc99;
-            case 'SF':
-                return 0x0066ff;
-            case 'OH':
-                return 0xcc33ff;
-            case 'TX':
-                return 0xff0066;
-            case 'FL':
-                return 0xff9933;
-            case 'NC':
-                return 0xccff33;
+            case 'BER':
+                return 0x3399cc; // light blue
+            case 'LON':
+                return 0xcc3333; // light red
+            case 'PAR':
+                return 0x33cc33; // light green
+            case 'MAD':
+                return 0xcccc33; // light yellow
+            case 'ROM':
+                return 0xcc33cc; // light magenta
+            case 'LIS':
+                return 0x33cccc; // light cyan
             default:
-                return 0xffffff;
+                return 0x000000;
         }
     }
 
     public getName(): string {
         switch (this.destination) {
-            case 'NY':
-                return 'New York';
-            case 'LA':
-                return 'Los Angeles';
-            case 'SF':
-                return 'San Francisco';
-            case 'OH':
-                return 'Ohio';
-            case 'TX':
-                return 'Texas';
-            case 'FL':
-                return 'Florida';
-            case 'NC':
-                return 'North Carolina';
+            case 'BER':
+                return 'Berlin';
+            case 'LON':
+                return 'London';
+            case 'PAR':
+                return 'Paris';
+            case 'MAD':
+                return 'Madrid';
+            case 'ROM':
+                return 'Rome';
+            case 'LIS':
+                return 'Listbon';
             default:
                 return '';
         }
