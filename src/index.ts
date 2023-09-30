@@ -110,6 +110,7 @@ class Stage extends Graphics {
                     this.despawnParcel(parcel);
                     this.selectedParcel?.destroy();
                     this.selectedParcel = undefined;
+                    this.scoreboard.addScore(1);
                 }
             })
             this.outputs.push(output);
@@ -120,7 +121,7 @@ class Stage extends Graphics {
 
     private despawnParcel(parcel: Parcel): void {
         const parcelOrigin = parcel.getLocation();
-        if (!parcelOrigin) {
+        if (parcelOrigin === undefined) {
             this.parcelInput.despawnParcel();
         } else {
             this.stacks.removeParcelFromStack(parcelOrigin);

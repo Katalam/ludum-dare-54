@@ -122,7 +122,7 @@ class Entry extends Graphics {
     }
 
     private drawDestination() {
-        const text = new Text(this.destination.getDestinationLong());
+        const text = new Text(this.destination.getName());
         text.x = this.fixedX + 10;
         text.y = this.fixedY;
 

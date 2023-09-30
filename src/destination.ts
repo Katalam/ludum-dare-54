@@ -24,25 +24,25 @@ export class Destination {
     public getColor(): number {
         switch (this.destination) {
             case 'NY':
-                return 0x00ff00;
+                return 0x009933;
             case 'LA':
-                return 0xff0000;
+                return 0x00cc99;
             case 'SF':
-                return 0x0000ff;
+                return 0x0066ff;
             case 'OH':
-                return 0xffff00;
+                return 0xcc33ff;
             case 'TX':
-                return 0x00ffff;
+                return 0xff0066;
             case 'FL':
-                return 0xff00ff;
+                return 0xff9933;
             case 'NC':
-                return 0x000000;
+                return 0xccff33;
             default:
-                return 0x000000;
+                return 0xffffff;
         }
     }
 
-    public getDestinationLong(): string {
+    public getName(): string {
         switch (this.destination) {
             case 'NY':
                 return 'New York';

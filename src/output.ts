@@ -1,5 +1,5 @@
 import { Destination } from './destination';
-import { FederatedPointerEvent, Graphics, Text } from 'pixi.js';
+import { Graphics, Text } from 'pixi.js';
 import { app } from './index';
 
 export class Output extends Graphics {
@@ -21,10 +21,7 @@ export class Output extends Graphics {
 
         this.eventMode = 'static';
         this.cursor = 'pointer';
-
-        this.on('pointerdown', (interactionEvent: FederatedPointerEvent) => {
-            this.onOutputSelectListener?.(this);
-        })
+        this.on('pointerdown', () => this.onOutputSelectListener?.(this))
     }
 
     public isOccupied(): boolean {
