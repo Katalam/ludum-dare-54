@@ -16,6 +16,7 @@ export class Clock extends Graphics {
         super();
 
         this.time = maxTime;
+        this.lastBlinkTime = maxTime;
 
         this.addClockRectangle();
         this.drawTimeLeft();
@@ -76,9 +77,8 @@ export class Clock extends Graphics {
         const seconds = this.time - (minutes * 60);
 
         // Blink the character every other second
-        const currentTime = this.time;
-        if (currentTime - this.lastBlinkTime > 100) {
-            this.lastBlinkTime = currentTime;
+        if (this.lastBlinkTime - this.time > 1) {
+            this.lastBlinkTime = this.time;
             this.blinkCharacter = this.blinkCharacter === " " ? ":" : " ";
         }
 
