@@ -29,7 +29,7 @@ module.exports = {
             patterns: [
                 { from: "src/index.html" },
                 { from: "src/main.css" },
-                //{ from: "src/assets", to: "assets" },
+                { from: "src/assets", to: "assets" },
             ],
         }),
     ],
