@@ -3,11 +3,10 @@ import { Graphics, Text } from 'pixi.js';
 import { app } from './index';
 
 export class Output extends Graphics {
-
     private static readonly EXIT_TIME_IN_SECONDS: number = 5;
 
     private destination: Destination | undefined;
-    private deltaTime: number = 0;
+    private time: number = 0;
     private startTime: number = 0;
 
     private lightbulb: Graphics | undefined;
@@ -34,7 +33,7 @@ export class Output extends Graphics {
      */
     public setDestination(destination: Destination): void {
         this.destination = destination;
-        this.startTime = this.deltaTime;
+        this.startTime = this.time;
 
         this.drawLightbulb();
     }
@@ -47,10 +46,10 @@ export class Output extends Graphics {
      * @param deltaTime The time in seconds since the last frame.
      */
     public updateDeltaTime(deltaTime: number): void {
-        this.deltaTime = deltaTime;
+        this.time += deltaTime;
 
         // Clear the destination after 5 seconds
-        if (this.startTime + Output.EXIT_TIME_IN_SECONDS < this.deltaTime) {
+        if (this.startTime + Output.EXIT_TIME_IN_SECONDS < this.time) {
             this.clearDestination();
         }
     }

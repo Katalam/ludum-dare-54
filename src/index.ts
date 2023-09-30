@@ -77,6 +77,7 @@ class Stage extends Graphics {
         this.addChild(this.scheduler);
 
         this.outputs.push(new Output());
+        this.outputs.forEach((output) => this.addChild(output));
     }
 
     public update(delta: number) {
