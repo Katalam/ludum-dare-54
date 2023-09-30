@@ -1,7 +1,7 @@
 import {Graphics, Text} from "pixi.js";
 
 export class ListItem extends Graphics {
-    private color: number = 0xffffff;
+    public color: string = 'red';
     public time: number = 0;
 
     public fixedX: number = 0;
@@ -11,7 +11,7 @@ export class ListItem extends Graphics {
 
     private text: Text | undefined;
 
-    constructor(time: number, x: number, y: number, width: number, height: number, color: number) {
+    constructor(time: number, x: number, y: number, width: number, height: number, color: string) {
         super();
 
         this.time = time;
@@ -27,7 +27,7 @@ export class ListItem extends Graphics {
 
     private drawListItem(): this {
         this.clear();
-        this.beginFill(this.color);
+        this.beginFill(this.convertColorToHex(this.color));
         this.drawRect(this.fixedX, this.fixedY, this.fixedWidth, this.fixedHeight);
         this.endFill();
 
@@ -58,6 +58,19 @@ export class ListItem extends Graphics {
         if (this.text) {
             this.text.text = this.getTextForClock();
             this.text.updateText(true);
+        }
+    }
+
+    private convertColorToHex(color: string): number {
+        switch (color) {
+            case "red":
+                return 0xff0000;
+            case "yellow":
+                return 0xffff00;
+            case "green":
+                return 0x00ff00;
+            default:
+                return 0x000000;
         }
     }
 }

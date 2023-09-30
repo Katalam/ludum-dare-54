@@ -1,6 +1,6 @@
-import {Graphics, Rectangle, Text} from "pixi.js";
-import {app, maxTime} from "./index";
-import {ListItem} from "./listItem";
+import { Graphics, Rectangle, Text } from "pixi.js";
+import { app, maxTime } from "./index";
+import { ListItem } from "./listItem";
 
 export class Scheduler extends Graphics {
     private time: number;
@@ -18,37 +18,41 @@ export class Scheduler extends Graphics {
     constructor() {
         super();
 
+        // Set the initial time and draw the panel rectangle
         this.time = maxTime;
-
         this.addPanelRectangle();
 
+        // Handle the list of items
         this.handleList(0);
     }
 
+    // Get the X offset for the panel rectangle
     private getOffsetX(): number {
         return (app.screen.width / 4) - (this.WIDTH / 2);
     }
 
-    // Used to draw a rectangle with a text inside
-    // representing the time left
+    // Draw the panel rectangle with the time left text
     private addPanelRectangle(): void {
         this.clear();
         this.beginFill(this.RECTANGLE_COLOR);
         this.drawRect(this.getOffsetX(), this.OFFSET_Y, this.WIDTH, this.HEIGHT);
         this.endFill();
 
+        // Add the panel rectangle to the stage
         app.stage.addChild(this);
     }
 
+    // Add a new item to the list
     private addToList(minTime: number): ListItem {
-        // 1. generate a random number between 10 and 20
+        // Generate a random time between MIN_VALUE_NEXT_TIME and MIN_VALUE_NEXT_TIME + ADD_VALUE_NEXT_TIME
         let time = Math.floor(Math.random() * this.MIN_VALUE_NEXT_TIME) + this.MIN_VALUE_NEXT_TIME;
         time += minTime;
 
-        let rectangle = new ListItem(time, this.getOffsetX(), this.OFFSET_Y, this.WIDTH, 30, 0xffffff);
+        // Create a new ListItem with the generated time
+        let rectangle = new ListItem(time, this.getOffsetX(), this.OFFSET_Y, this.WIDTH, 30, 'red');
 
+        // Add the ListItem to the list and to the Scheduler
         this.list.push(rectangle);
-
         this.addChild(rectangle);
 
         return rectangle;
@@ -64,6 +68,9 @@ export class Scheduler extends Graphics {
             item.redrawTimeLeft();
 
             if (item.time <= 0) {
+                // Draw the lightbulb
+                this.drawLightbulb(item.color);
+
                 this.removeChild(item);
             }
         });
@@ -86,6 +93,41 @@ export class Scheduler extends Graphics {
 
         if (this.time > 0) {
             this.handleList(deltaTimeInSeconds);
+        }
+    }
+
+    private drawLightbulb(color: string): void {
+        const x = app.screen.width - 100;
+        const y = app.screen.height - 200;
+
+        let lightbulb = new Graphics();
+        lightbulb.beginFill(this.convertColorToHex(color));
+        lightbulb.drawCircle(x, y, 20);
+        lightbulb.endFill();
+
+        let text = new Text("NY", { fill: 0xf, fontSize: 20 });
+        text.x = x - lightbulb.width / 2 + text.width / 4;
+        text.y = y - lightbulb.height / 2 + text.width / 5;
+
+        this.addChild(lightbulb);
+        this.addChild(text);
+
+        setTimeout(() => {
+            this.removeChild(lightbulb);
+            this.removeChild(text);
+        }, 5000);
+    }
+
+    private convertColorToHex(color: string): number {
+        switch (color) {
+            case "red":
+                return 0xff0000;
+            case "yellow":
+                return 0xffff00;
+            case "green":
+                return 0x00ff00;
+            default:
+                return 0x000000;
         }
     }
 }
