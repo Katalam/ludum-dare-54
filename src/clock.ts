@@ -22,12 +22,16 @@ export class Clock extends Graphics {
         this.drawTimeLeft();
     }
 
-    public addDeltaTime(deltaTimeInSeconds: number): void {
-        this.time -= deltaTimeInSeconds;
+    public update(secondsPast: number): void {
+        this.time -= secondsPast;
 
         if (this.time > 0) {
             this.redrawTimeLeft();
         }
+    }
+
+    public getTimeLeft(): number {
+        return this.time;
     }
 
     private getOffsetX(): number {

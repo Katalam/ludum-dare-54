@@ -3,6 +3,8 @@ import { Clock } from "./clock";
 import { Scheduler } from "./scheduler";
 import { Parcel, ParcelInput, Stacks } from "./stacks";
 import { Output } from "./output";
+import { ScoreBoard as Scoreboard } from "./scoreboard";
+import { Destination } from "./destination";
 
 let stage: Stage;
 
@@ -44,13 +46,18 @@ function setupAndStart(): void {
  */
 class Stage extends Graphics {
 
+    private static readonly PARCEL_SPAWN_TIME = 2.0;
+    private static readonly MAX_SCHEDULED_OUTPUT_TASKS = 3;
+
     private parcelInput: ParcelInput;
     private stacks: Stacks;
     private clock: Clock;
     private scheduler: Scheduler;
     private outputs: Output[] = [];
+    private scoreboard: Scoreboard;
 
     private selectedParcel: Parcel | undefined;
+    private timeUntilNextParcelSpawn = 1.0;
 
     constructor() {
         super();
@@ -66,30 +73,51 @@ class Stage extends Graphics {
         this.parcelInput.y = 700;
         this.addChild(this.parcelInput);
 
-        const parcel = new Parcel(Math.random() * 0xFFFFFF);
-        parcel.setOnParcelSelectListener((p: Parcel) => this.onParcelSelected(p));
-        this.parcelInput.spawnParcel(parcel);
-
         this.clock = new Clock();
         this.addChild(this.clock)
 
         this.scheduler = new Scheduler();
         this.addChild(this.scheduler);
+        this.scheduler.setOnTimeReachedListener((destination: Destination) => this.onScheduledTimeReached(destination));
 
         this.outputs.push(new Output());
         this.outputs.forEach((output) => this.addChild(output));
+        this.scoreboard = new Scoreboard();
+        this.addChild(this.scoreboard);
+    }
+
+    private spawnParcel(): void {
+        const parcel = new Parcel(Math.random() * 0xFFFFFF);
+        parcel.setOnParcelSelectListener((parcel: Parcel) => this.onParcelSelected(parcel));
+        this.parcelInput.spawnParcel(parcel);
+        this.timeUntilNextParcelSpawn = Stage.PARCEL_SPAWN_TIME;
+    }
+
+    private onScheduledTimeReached(destination: Destination): void {
+        this.outputs.find(output => !output.isOccupied())?.setDestination(destination);
     }
 
     public update(delta: number) {
-        this.clock.addDeltaTime(delta);
-        this.scheduler.addDeltaTime(delta);
+        this.clock.update(delta);
+        this.scheduler.update(delta);
         this.parcelInput.update(delta);
         this.outputs.forEach((output) => output.updateDeltaTime(delta));
 
-        if (!this.parcelInput.hasParcel()) {
-            const parcel = new Parcel(Math.random() * 0xFFFFFF);
-            parcel.setOnParcelSelectListener((parcel: Parcel) => this.onParcelSelected(parcel));
-            this.parcelInput.spawnParcel(parcel);
+        this.timeUntilNextParcelSpawn -= delta;
+
+        if (!this.parcelInput.hasParcel() && this.timeUntilNextParcelSpawn <= 0.0) {
+            this.spawnParcel();
+        }
+
+        if (this.scheduler.getEntries().length < Stage.MAX_SCHEDULED_OUTPUT_TASKS) {
+            const longestTime = this.scheduler.getEntries().length > 0 ? Math.max(...this.scheduler.getEntries().map((item) => item.getTimeUntilArrival())) : 0;
+            const time = longestTime + Scheduler.MIN_VALUE_NEXT_TIME + Math.floor(Math.random() * Scheduler.MIN_VALUE_NEXT_TIME);
+
+            this.scheduler.addEntry(time, Destination.getRandomDestination())
+        }
+
+        if (this.clock.getTimeLeft() <= 0.0) {
+            console.log("Round complete.") // TODO
         }
     }
 
