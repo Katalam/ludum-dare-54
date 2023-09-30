@@ -91,30 +91,41 @@ class Stage extends Graphics {
     private spawnOutputs() {
         for (let i = 0; i < Stage.AMOUNT_OF_OUTPUTS; i++) {
             const output = new Output();
+
+            /**
+             * Handles the pointer down event.
+             * If the output is occupied, the parcel is right, it will be removed.
+             * If the output is occupied, the parcel is wrong, it will do nothing.
+             * If the output is not occupied, it will do nothing.
+             */
             output.setOnOutputSelectListener((output: Output) => {
-                if (!output.getDestination()) {
+                if (!output.isOccupied()) {
                     return;
                 }
 
                 const parcel = this.selectedParcel;
-                if (!parcel) {
+                if (parcel === undefined) {
                     return;
                 }
 
-                if (parcel.getColor() === output.getDestination()?.getColor() || true) {
-                    const parcelOrigin = parcel.getLocation();
-                    if (!parcelOrigin) {
-                        this.parcelInput.despawnParcel();
-                    } else {
-                        this.stacks.removeParcelFromStack(parcelOrigin);
-                    }
+                if (parcel.getColor() === output.getDestination()?.getColor()) {
+                    this.despawnParcel(parcel);
                     this.selectedParcel?.destroy();
                     this.selectedParcel = undefined;
                 }
             })
             this.outputs.push(output);
-            this.outputs.forEach((output) => this.addChild(output));
-            this.outputs.forEach((output) => output.setDestination(Destination.getRandomDestination()));
+            this.addChild(output);
+            output.setDestination(Destination.getRandomDestination());
+        }
+    }
+
+    private despawnParcel(parcel: Parcel): void {
+        const parcelOrigin = parcel.getLocation();
+        if (!parcelOrigin) {
+            this.parcelInput.despawnParcel();
+        } else {
+            this.stacks.removeParcelFromStack(parcelOrigin);
         }
     }
 
@@ -166,13 +177,7 @@ class Stage extends Graphics {
             return;
         }
 
-        const parcelOrigin = this.selectedParcel.getLocation();
-        if (parcelOrigin === undefined) {
-            this.parcelInput.despawnParcel();
-        } else {
-            this.stacks.removeParcelFromStack(parcelOrigin);
-        }
-
+        this.despawnParcel(this.selectedParcel);
         this.stacks.placeParcelOnStack(this.selectedParcel, stackId);
         this.selectedParcel = undefined;
     }

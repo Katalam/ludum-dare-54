@@ -95,13 +95,6 @@ export class Output extends Graphics {
         this.addChild(this.text);
     }
 
-    /**
-     * Handles the pointer down event.
-     * If the output is occupied, the parcel is right, it will be removed.
-     * If the output is occupied, the parcel is wrong, it will do nothing.
-     * If the output is not occupied, it will do nothing.
-     */
-
     public setOnOutputSelectListener(listener: (output: Output) => void): void {
         this.onOutputSelectListener = listener;
     }
