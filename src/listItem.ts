@@ -39,7 +39,11 @@ export class ListItem extends Graphics {
     }
 
     private drawDestination() {
-        this.text = new Text(this.destination.getDestinationLong());
+        const text = new Text(this.destination.getDestinationLong());
+        text.x = this.fixedX + 10;
+        text.y = this.fixedY;
+
+        this.addChild(text);
     }
 
     private drawTimeLeft(): void {
