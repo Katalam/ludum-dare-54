@@ -2,6 +2,7 @@ import { Application, Graphics } from "pixi.js"
 import { Clock } from "./clock";
 import { Scheduler } from "./scheduler";
 import { Parcel, ParcelInput, Stacks } from "./stacks";
+import { Output } from "./output";
 
 let stage: Stage;
 
@@ -47,6 +48,7 @@ class Stage extends Graphics {
     private stacks: Stacks;
     private clock: Clock;
     private scheduler: Scheduler;
+    private outputs: Output[] = [];
 
     private selectedParcel: Parcel | undefined;
 
@@ -73,12 +75,15 @@ class Stage extends Graphics {
 
         this.scheduler = new Scheduler();
         this.addChild(this.scheduler);
+
+        this.outputs.push(new Output());
     }
 
     public update(delta: number) {
         this.clock.addDeltaTime(delta);
         this.scheduler.addDeltaTime(delta);
         this.parcelInput.update(delta);
+        this.outputs.forEach((output) => output.updateDeltaTime(delta));
 
         if (!this.parcelInput.hasParcel()) {
             const parcel = new Parcel(Math.random() * 0xFFFFFF);

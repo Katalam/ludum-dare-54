@@ -70,7 +70,7 @@ export class Scheduler extends Graphics {
 
             if (item.time <= 0.0) {
                 // Draw the lightbulb
-                this.drawLightbulb(item.destination);
+                // this.drawLightbulb(item.destination);
 
                 this.removeChild(item);
                 item.destroy();
@@ -96,27 +96,5 @@ export class Scheduler extends Graphics {
         if (this.time > 0) {
             this.handleList(deltaTimeInSeconds);
         }
-    }
-
-    private drawLightbulb(destination: Destination): void {
-        const x = app.screen.width - 100;
-        const y = app.screen.height - 200;
-
-        const lightbulb = new Graphics();
-        lightbulb.beginFill(destination.getColor());
-        lightbulb.drawCircle(x, y, 20);
-        lightbulb.endFill();
-
-        const text = new Text(destination.destination, { fill: 0xf, fontSize: 20 });
-        text.x = x - lightbulb.width / 2 + text.width / 4;
-        text.y = y - lightbulb.height / 2 + text.width / 5;
-
-        this.addChild(lightbulb);
-        this.addChild(text);
-
-        setTimeout(() => {
-            this.removeChild(lightbulb);
-            this.removeChild(text);
-        }, 5000);
     }
 }
