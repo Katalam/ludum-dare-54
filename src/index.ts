@@ -1,10 +1,12 @@
 import { Application, IShape, Graphics } from "pixi.js"
+import { Clock } from "./clock";
 
 let stage: Stage;
+let clock: Clock;
 
 // Get the HTML wrapper element, start up a pixi.js application and add its canvas element to the wrapper.
 const wrapper = document.getElementById("wrapper");
-const app = new Application<HTMLCanvasElement>({ antialias: true, backgroundColor: 0x66ffff, resizeTo: wrapper !== null ? wrapper : window });
+export const app = new Application<HTMLCanvasElement>({ antialias: true, backgroundColor: 0x66ffff, resizeTo: wrapper !== null ? wrapper : window });
 document.getElementById("wrapper")?.appendChild(app.view);
 
 /**
@@ -28,6 +30,10 @@ function setupAndStart(): void {
     // multiplying by 1/60 transforms this in seconds since last call
     const MOVEMENT_FACTOR = 1.0 / 60.0;
     app.ticker.add((delta: number) => gameLoop(delta * MOVEMENT_FACTOR));
+
+    // add a clock to the stage
+    clock = new Clock(10);
+    app.stage.addChild(clock)
 }
 
 /**
@@ -43,7 +49,7 @@ class Stage extends Graphics {
     }
 
     public update(delta: number) {
-        //
+        clock.addDeltaTime(delta);
     }
 }
 
