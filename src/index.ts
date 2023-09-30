@@ -1,6 +1,7 @@
-import { Application, IShape, Graphics } from "pixi.js"
+import { Application, Graphics } from "pixi.js"
 import { Clock } from "./clock";
 import { Scheduler } from "./scheduler";
+import { Parcel, ParcelInput, Stacks } from "./stacks";
 
 let stage: Stage;
 let clock: Clock;
@@ -39,9 +40,9 @@ function setupAndStart(): void {
     clock = new Clock();
     app.stage.addChild(clock)
 
-	// add the scheduler to the stage
-	scheduler = new Scheduler();
-	app.stage.addChild(scheduler);
+    // add the scheduler to the stage
+    scheduler = new Scheduler();
+    app.stage.addChild(scheduler);
 }
 
 /**
@@ -52,48 +53,64 @@ function setupAndStart(): void {
  */
 class Stage extends Graphics {
 
+    private parcelInput: ParcelInput;
+    private stacks: Stacks;
+
+    private selectedParcel: Parcel | undefined;
+
     constructor() {
         super();
+
+        this.stacks = new Stacks();
+        this.stacks.x = 400;
+        this.stacks.y = 500;
+        this.addChild(this.stacks);
+
+        this.stacks.setOnSelectListener((stackId: number) => this.onStackSelected(stackId));
+
+        this.parcelInput = new ParcelInput();
+        this.parcelInput.y = 700;
+        this.addChild(this.parcelInput);
+
+        const parcel = new Parcel(Math.random() * 0xFFFFFF);
+        parcel.setOnParcelSelectListener((p: Parcel) => this.onParcelSelected(p));
+        this.parcelInput.spawnParcel(parcel);
     }
 
     public update(delta: number) {
         clock.addDeltaTime(delta);
         scheduler.addDeltaTime(delta);
-    }
-}
+        this.parcelInput.update(delta);
 
-class ColoredShape<T extends IShape> extends Graphics {
-
-    private shape: T;
-    private color: number;
-
-    constructor(shape: T, color: number) {
-        super();
-        this.shape = shape;
-        this.color = color;
-
-        this.redraw();
+        if (!this.parcelInput.hasParcel()) {
+            const parcel = new Parcel(Math.random() * 0xFFFFFF);
+            parcel.setOnParcelSelectListener((parcel: Parcel) => this.onParcelSelected(parcel));
+            this.parcelInput.spawnParcel(parcel);
+        }
     }
 
-    public setColor(color: number) {
-        this.color = color;
-        this.redraw();
+    private onParcelSelected(parcel: Parcel) {
+        if (typeof (parcel.getLocation()) === "number" && !parcel.isOnTopOfStack()) {
+            return;
+        }
+
+        this.selectedParcel = parcel;
     }
 
-    public setShape(shape: T) {
-        this.shape = shape;
-        this.redraw();
-    }
+    private onStackSelected(stackId: number) {
+        if (this.selectedParcel === undefined) {
+            return;
+        }
 
-    public getShape(): T {
-        return this.shape;
-    }
+        const parcelOrigin = this.selectedParcel.getLocation();
+        if (parcelOrigin === undefined) {
+            this.parcelInput.despawnParcel();
+        } else {
+            this.stacks.removeParcelFromStack(parcelOrigin);
+        }
 
-    public redraw() {
-        this.clear();
-        this.beginFill(this.color);
-        this.drawShape(this.shape);
-        this.endFill();
+        this.stacks.placeParcelOnStack(this.selectedParcel, stackId);
+        this.selectedParcel = undefined;
     }
 }
 
