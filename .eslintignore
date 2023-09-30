@@ -1,0 +1,6 @@
+.vscode
+dist
+node_modules
+.eslintrc.js
+webpack.config.js
+webpack.dev.config.js
