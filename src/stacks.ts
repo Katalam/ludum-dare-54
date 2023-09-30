@@ -1,4 +1,4 @@
-import { FederatedPointerEvent, Graphics, Rectangle } from "pixi.js";
+import { FederatedPointerEvent, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
 import { ColoredShape } from "./shape";
 import { Parcel } from "./parcel";
 
@@ -54,9 +54,14 @@ export class ParcelInput extends Graphics {
     private redraw(): void {
         this.clear();
 
-        this.beginFill(0xFF000);
-        this.drawRect(0, 0, Parcel.PARCEL_WIDTH + 60, 40);
-        this.endFill();
+        const texture = Texture.from("assets/conveyable.png");
+        const sprite = new Sprite(texture);
+
+        sprite.x = -50;
+        sprite.width = Parcel.PARCEL_WIDTH + 110;
+        sprite.height = 40;
+
+        this.addChild(sprite);
     }
 
 }

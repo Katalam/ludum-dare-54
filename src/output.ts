@@ -1,5 +1,5 @@
 import { Destination } from './destination';
-import { Graphics, Text } from 'pixi.js';
+import { Graphics, Sprite, Text, Texture } from 'pixi.js';
 import { Parcel } from './parcel';
 
 export class Output extends Graphics {
@@ -20,9 +20,14 @@ export class Output extends Graphics {
 
         this.destination = destination;
 
-        this.beginFill(0xFF000);
-        this.drawRect(0, 0, Parcel.PARCEL_WIDTH + 60, 40);
-        this.endFill();
+        const texture = Texture.from("assets/conveyable.png");
+        const sprite = new Sprite(texture);
+
+        sprite.x = 10;
+        sprite.width = Parcel.PARCEL_WIDTH + 110;
+        sprite.height = 40;
+
+        this.addChild(sprite);
 
         this.lightbulb = new Graphics();
         this.text = new Text(undefined, { fill: 0xf, fontSize: 20 });
@@ -93,7 +98,7 @@ export class Output extends Graphics {
         this.lightbulb.visible = true;
 
         this.lightbulb.beginFill(this.destination.getColor());
-        this.lightbulb.drawCircle(0, 0, 40);
+        this.lightbulb.drawCircle(0, -65, 40);
         this.lightbulb.endFill();
         this.lightbulb.x = (Parcel.PARCEL_WIDTH + 60) / 2;
         this.lightbulb.y = 20;
@@ -101,7 +106,7 @@ export class Output extends Graphics {
         this.text.text = this.destination.destination;
         this.text.updateText(true);
         this.text.x = -this.text.width / 2 + (Parcel.PARCEL_WIDTH + 60) / 2;
-        this.text.y = -this.text.height / 2 + 20;
+        this.text.y = -this.text.height / 2 - 45;
     }
 
     public setOnOutputSelectListener(listener: (output: Output) => void): void {
