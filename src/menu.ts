@@ -6,13 +6,11 @@ export class Menu extends Container {
 
     private static TITLE_STYLE = new TextStyle({
         fontSize: 128,
+        fontFamily: "Courier New",
         fontWeight: 'bold',
-        fill: [
-            "#0bace1",
-            "#73c1df"
-        ],
-        stroke: "#0707e2",
-        strokeThickness: 3
+        fill: '#ffffff',
+        stroke: "#1A00BD",
+        strokeThickness: 6
     });
 
     private static BUTTON_STYLE = new TextStyle({
@@ -26,9 +24,8 @@ export class Menu extends Container {
         fontStyle: "italic",
         fill: '#ffffff',
         stroke: '#000000',
-        strokeThickness: 5,
-        fontFamily: "\"Comic Sans MS\", cursive, sans-serif",
-        lineJoin: 'round'
+        strokeThickness: 6,
+        fontFamily: "Courier New",
     });
 
     private titleText: Text;

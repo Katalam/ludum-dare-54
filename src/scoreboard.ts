@@ -1,4 +1,4 @@
-import { Container, Graphics, RoundedRectangle, Text, TextStyle, graphicsUtils } from "pixi.js";
+import { Container, Graphics, Text, TextStyle } from "pixi.js";
 
 export class ScoreBoard extends Container {
 
