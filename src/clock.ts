@@ -5,7 +5,7 @@ export class Clock extends Graphics {
     public static readonly WIDTH: number = 200;
     public static readonly HEIGHT: number = 70;
 
-    private static readonly RECTANGLE_COLOR: number = 0x000000;
+    private static readonly RECTANGLE_COLOR: number = 0x1A00BD;
     private static readonly TEXT_COLOR: number = 0xffffff;
 
     private text: Text;
@@ -17,18 +17,21 @@ export class Clock extends Graphics {
         this.time = deadline;
         this.lastBlinkTime = deadline;
 
+        this.beginFill(0x000000);
+        this.drawRoundedRect(-2, 8, Clock.WIDTH + 4, Clock.HEIGHT + 4, 10);
         this.beginFill(Clock.RECTANGLE_COLOR);
-        this.drawRect(0, 0, Clock.WIDTH, Clock.HEIGHT);
+        this.drawRoundedRect(0, 10, Clock.WIDTH, Clock.HEIGHT, 10);
         this.endFill();
 
         this.text = new Text(this.getTextForClock(), {
-            fontFamily: "Arial",
+            fontFamily: "Courier New",
             fontSize: 64,
             fill: Clock.TEXT_COLOR,
             align: "center",
         });
 
-        this.text.x = (this.text.width / 2);
+        this.text.x = (this.text.width / 4) - 10;
+        this.text.y = 14;
 
         this.addChild(this.text);
     }
