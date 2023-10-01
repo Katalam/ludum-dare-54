@@ -155,7 +155,7 @@ class Stage extends Graphics {
                 }
 
                 if (parcel.hasSameDestination(output.getDestination()!)) {
-                    this.despawnParcel(parcel);
+                    this.removeParcelFromCurrentLocation(parcel);
                     this.selectedParcel?.destroy();
                     this.selectedParcel = undefined;
                     this.scoreboard.addScore(1);
@@ -167,7 +167,7 @@ class Stage extends Graphics {
         }
     }
 
-    private despawnParcel(parcel: Parcel): void {
+    private removeParcelFromCurrentLocation(parcel: Parcel): void {
         const parcelOrigin = parcel.getLocation();
         if (parcelOrigin === undefined) {
             this.parcelInput.despawnParcel();
@@ -249,6 +249,10 @@ class Stage extends Graphics {
             return;
         }
 
+        if (this.selectedParcel !== undefined) {
+            this.selectedParcel.setBorderSelectedVisible(false);
+        }
+
         this.selectedParcel = parcel;
         this.selectedParcel.setBorderSelectedVisible(true);
     }
@@ -261,7 +265,7 @@ class Stage extends Graphics {
             return;
         }
 
-        this.despawnParcel(this.selectedParcel);
+        this.removeParcelFromCurrentLocation(this.selectedParcel);
         this.stacks.placeParcelOnStack(this.selectedParcel, stackId);
         this.selectedParcel.setBorderSelectedVisible(false);
         this.selectedParcel = undefined;

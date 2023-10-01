@@ -49,7 +49,7 @@ export class Parcel extends ColoredShape<Rectangle> {
     public setBorderSelectedVisible(visible: boolean): void {
         this.borderSelected!.alpha = visible ? 1.0 : 0.0;
     }
-    
+
     private addBorder(): void {
         this.border = new Sprite(Texture.WHITE);
         this.border.width = Parcel.PARCEL_WIDTH + 2;
