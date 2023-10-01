@@ -5,9 +5,10 @@ export class Menu extends Container {
     private static readonly PRIMARY_BLUE = 0x1A00BD;
 
     private static TITLE_STYLE = new TextStyle({
-        fontSize: 128,
+        fontSize: 80,
         fontFamily: "Courier New",
         fontWeight: 'bold',
+        align: 'center',
         fill: '#ffffff',
         stroke: "#1A00BD",
         strokeThickness: 6
@@ -87,7 +88,7 @@ export class Menu extends Container {
         });
         this.addChild(this.howToButton);
 
-        this.titleText = new Text("Parcel Mover", Menu.TITLE_STYLE);
+        this.titleText = new Text("Parcel Clicker:\nSpeedy Delivieres", Menu.TITLE_STYLE);
         this.titleText.x = app.screen.width / 2 - this.titleText.width / 2;
         this.titleText.y = 30;
         this.addChild(this.titleText);

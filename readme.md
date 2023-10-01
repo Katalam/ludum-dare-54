@@ -1,4 +1,4 @@
-# Parcel Mover
+# ParcelClicker: Speedy Delivieres
 
 This project is a parcel moving game using [TypeScript](https://www.typescriptlang.org/)
 with [PixiJS](https://pixijs.com/).
