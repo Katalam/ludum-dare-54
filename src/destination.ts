@@ -1,22 +1,33 @@
 export class Destination {
-    private static destinations = [
-        'BER',
-        'LON',
-        'PAR',
-        'MAD',
-        'ROM',
-        'LIS',
-    ];
 
-    static getRandomDestination(): Destination {
-        const destination = this.destinations[Math.floor(Math.random() * this.destinations.length)] as string;
+    public static readonly BER = new Destination('BER');
+    public static readonly LON = new Destination('LON');
+    public static readonly PAR = new Destination('PAR');
+    public static readonly MAD = new Destination('MAD');
+    public static readonly ROM = new Destination('ROM');
+    public static readonly LIS = new Destination('LIS');
 
-        return new this(destination);
+    private static destinations = [Destination.BER, Destination.LON, Destination.PAR, Destination.MAD, Destination.ROM, Destination.LIS];
+
+    public static getRandomDestination(limit: number = this.destinations.length): Destination {
+        if (limit <= 0 || limit > this.destinations.length) {
+            throw new RangeError();
+        }
+
+        return this.destinations[Math.floor(Math.random() * limit)]!;
     }
 
-    public destination: string = '';
+    public static getDestinationByIndex(index: number): Destination {
+        if (index < 0 || index >= this.destinations.length) {
+            throw new RangeError();
+        }
 
-    constructor(destination: string) {
+        return this.destinations[index]!;
+    }
+
+    public destination: string;
+
+    private constructor(destination: string) {
         this.destination = destination;
     }
 

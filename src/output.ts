@@ -4,7 +4,7 @@ import { Parcel } from './parcel';
 
 export class Output extends Graphics {
 
-    private static readonly EXIT_TIME_IN_SECONDS: number = 5;
+    public static readonly EXIT_TIME_IN_SECONDS: number = 8;
 
     private destination: Destination | undefined;
     private time: number = 0;

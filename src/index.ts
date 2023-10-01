@@ -50,7 +50,9 @@ class Stage extends Graphics {
 
     private static readonly PARCEL_SPAWN_TIME = 2.0;
     private static readonly MAX_SCHEDULED_OUTPUT_TASKS = 3;
-    private static readonly DEADLINE = 300;
+    private static readonly DEADLINE = 2 * 60;
+    private static readonly ACTIVATE_NEW_DESTINATIONS_AFTER = Stage.DEADLINE / 3;
+    private static readonly AMOUNT_OF_OUTPUTS = 1;
 
     private parcelInput: ParcelInput;
     private stacks: Stacks;
@@ -60,10 +62,10 @@ class Stage extends Graphics {
     private menu: Menu;
     private outputs: Output[] = [];
 
-    private static readonly AMOUNT_OF_OUTPUTS = 3;
-
     private selectedParcel: Parcel | undefined;
     private timeUntilNextParcelSpawn = 1.0;
+
+    private activeDestinations: Destination[] = [];
 
     constructor() {
         super();
@@ -116,7 +118,10 @@ class Stage extends Graphics {
         this.scheduler.visible = true;
         this.scoreboard.visible = true;
         this.stacks.setInteractive(true);
-        this.outputs.forEach(output => output.setInteractive(true));
+        this.outputs.forEach(output => {
+            output.setInteractive(true);
+            output.clearDestination();
+        });
 
         this.clock.setDeadline(Stage.DEADLINE);
         this.parcelInput.despawnParcel();
@@ -124,6 +129,9 @@ class Stage extends Graphics {
         this.stacks.clearStacks();
 
         this.scoreboard.resetScore();
+
+        this.activeDestinations = [Destination.getDestinationByIndex(0), Destination.getDestinationByIndex(1), Destination.getDestinationByIndex(2), Destination.getDestinationByIndex(3)];
+        this.scheduler.addEntry(5, Destination.getRandomDestination(4));
     }
 
     private spawnOutputs() {
@@ -168,8 +176,8 @@ class Stage extends Graphics {
         }
     }
 
-    private spawnParcel(): void {
-        const parcel = new Parcel(Destination.getRandomDestination());
+    private spawnParcel(destination: Destination): void {
+        const parcel = new Parcel(destination);
         parcel.setOnParcelSelectListener((parcel: Parcel) => this.onParcelSelected(parcel));
         this.parcelInput.spawnParcel(parcel);
         this.timeUntilNextParcelSpawn = Stage.PARCEL_SPAWN_TIME;
@@ -200,17 +208,32 @@ class Stage extends Graphics {
             this.scheduler.update(delta);
             this.outputs.forEach((output) => output.updateDeltaTime(delta));
 
+            if (this.clock.getTimeLeft() < Stage.DEADLINE - Stage.ACTIVATE_NEW_DESTINATIONS_AFTER && this.activeDestinations.length < 5) {
+                this.activeDestinations.push(Destination.getDestinationByIndex(4));
+            } else if (this.clock.getTimeLeft() < Stage.DEADLINE - 2 * Stage.ACTIVATE_NEW_DESTINATIONS_AFTER && this.activeDestinations.length < 6) {
+                this.activeDestinations.push(Destination.getDestinationByIndex(5));
+            }
+
             this.timeUntilNextParcelSpawn -= delta;
 
             if (!this.parcelInput.hasParcel() && this.timeUntilNextParcelSpawn <= 0.0) {
-                this.spawnParcel();
+                this.spawnParcel(Destination.getRandomDestination(this.activeDestinations.length));
             }
 
             if (this.scheduler.getEntries().length < Stage.MAX_SCHEDULED_OUTPUT_TASKS) {
                 const longestTime = this.scheduler.getEntries().length > 0 ? Math.max(...this.scheduler.getEntries().map((item) => item.getTimeUntilArrival())) : 0;
-                const time = longestTime + Scheduler.MIN_VALUE_NEXT_TIME + Math.floor(Math.random() * Scheduler.MIN_VALUE_NEXT_TIME);
+                const time = longestTime + Scheduler.MIN_VALUE_NEXT_TIME + Math.floor(Math.random() * Scheduler.ADD_VALUE_NEXT_TIME);
 
-                this.scheduler.addEntry(time, Destination.getRandomDestination())
+                // prevent same destinations in a row
+                let availableDestinations = this.activeDestinations.slice();
+                const scheduledOutputs = this.scheduler.getEntries()[0];
+                if (scheduledOutputs !== undefined) {
+                    availableDestinations = availableDestinations.filter(destination => destination !== scheduledOutputs.getDestination());
+                }
+                const chosenDestination = availableDestinations[Math.floor(Math.random() * availableDestinations.length)];
+                if (chosenDestination !== undefined) {
+                    this.scheduler.addEntry(time, chosenDestination);
+                }
             }
 
             if (this.clock.getTimeLeft() <= 0.0) {
