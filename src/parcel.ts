@@ -96,8 +96,8 @@ export class Parcel extends ColoredShape<Rectangle> {
         const text = new Text(this.destination.destination, {
             fontSize: 18,
         });
-        text.x = this.width / 2 - text.width / 2 + 5;
-        text.y = this.height / 2 - text.height / 2 + 1;
+        text.x = this.width / 2 - text.width / 2 + 2;
+        text.y = this.height / 2 - text.height / 2 - 1;
 
         this.addChild(text);
     }
