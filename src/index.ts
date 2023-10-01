@@ -209,7 +209,7 @@ class Stage extends Graphics {
             this.parcelInput.update(delta);
             this.clock.update(delta);
             this.scheduler.update(delta);
-            this.outputs.forEach((output) => output.updateDeltaTime(delta));
+            this.outputs.forEach((output) => output.update(delta));
 
             if (this.clock.getTimeLeft() < Stage.DEADLINE - Stage.ACTIVATE_NEW_DESTINATIONS_AFTER && this.activeDestinations.length < 5) {
                 this.activeDestinations.push(Destination.getDestinationByIndex(4));
