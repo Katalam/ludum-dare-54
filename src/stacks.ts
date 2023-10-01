@@ -35,7 +35,7 @@ export class ParcelInput extends Graphics {
 
     public despawnParcel() {
         if (this.parcel === undefined) {
-            throw new Error();
+            return
         }
 
         this.removeChild(this.parcel);
@@ -159,5 +159,13 @@ export class Stacks extends Graphics {
         const parcelStack = this.parcelStacks[stackId]!;
 
         return parcelStack.filter(parcel => parcel.isOnTopOfStack())[0];
+    }
+
+    public clearStacks(): void {
+        this.parcelStacks.forEach(parcelStack => {
+            parcelStack.forEach(parcel => {
+                this.removeChild(parcel);
+            });
+        });
     }
 }

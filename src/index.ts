@@ -118,7 +118,12 @@ class Stage extends Graphics {
         this.stacks.setInteractive(true);
         this.outputs.forEach(output => output.setInteractive(true));
 
-        // TODO reset game state
+        this.clock.setDeadline(Stage.DEADLINE);
+        this.parcelInput.despawnParcel();
+
+        this.stacks.clearStacks();
+
+        this.scoreboard.resetScore();
     }
 
     private spawnOutputs() {
@@ -211,6 +216,7 @@ class Stage extends Graphics {
             if (this.clock.getTimeLeft() <= 0.0) {
                 this.menu.displayLost(this.scoreboard.getScore());
                 this.menu.visible = true;
+                gameState = "gameover";
             }
         }
     }

@@ -33,6 +33,10 @@ export class Clock extends Graphics {
         this.addChild(this.text);
     }
 
+    public setDeadline(time: number): void {
+        this.time = time;
+    }
+
     public update(secondsPast: number): void {
         this.time -= secondsPast;
 

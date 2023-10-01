@@ -125,7 +125,7 @@ export class Menu extends Container {
 
         this.startText.text = "Restart";
         this.startText.x = app.screen.width / 2 - this.startText.width / 2;
-        this.startText.y = 720;
+        this.startText.y = app.screen.height / 2;
 
         this.titleText.text = "Shift Done"
         this.titleText.x = app.screen.width / 2 - this.titleText.width / 2;
@@ -139,7 +139,7 @@ export class Menu extends Container {
             "Earn points by delivering parcels to the correct output while it is active.\n\n" +
             "Controls: Click (or touch) a parcel to select it.\nThen click on a destination to move the parcel."
         this.infoText.x = app.screen.width / 2 - this.infoText.width / 2;
-        this.infoText.y = 180;
+        this.infoText.y = app.screen.height / 4;
 
         this.howToButton.visible = false;
         this.howToText.visible = false;
