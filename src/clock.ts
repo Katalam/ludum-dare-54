@@ -59,7 +59,6 @@ export class Clock extends Graphics {
         const minutes = Math.floor(this.time / 60);
         const seconds = this.time - (minutes * 60);
 
-
         // Blink the character every other second
         if (this.lastBlinkTime - this.time > 1) {
             this.lastBlinkTime = this.time;

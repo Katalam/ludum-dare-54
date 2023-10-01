@@ -1,4 +1,4 @@
-import { Graphics, Texture, Sprite, FederatedPointerEvent } from "pixi.js";
+import { Graphics, Texture, Sprite } from "pixi.js";
 import { Parcel } from "./parcel";
 
 export class ParcelInput extends Graphics {
@@ -18,17 +18,16 @@ export class ParcelInput extends Graphics {
         this.eventMode = 'static';
         this.cursor = 'pointer';
 
-        this.on("mouseover", (interactionEvent: FederatedPointerEvent) => this.onMouseOver(interactionEvent));
-        this.on("mouseleave", (interactionEvent: FederatedPointerEvent) => this.onMouseLeave(interactionEvent));
-
-        this.on("pointerdown", (interactionEvent: FederatedPointerEvent) => this.onParcelInputSelectListener?.(this));
+        this.on("mouseover", () => this.onMouseOver());
+        this.on("mouseleave", () => this.onMouseLeave());
+        this.on("pointerdown", () => this.onParcelInputSelectListener?.(this));
     }
 
     public setOnParcelInputSelectListener(listener: (parcelInput: ParcelInput) => void): void {
         this.onParcelInputSelectListener = listener;
     }
 
-    private onMouseOver(interactionEvent: FederatedPointerEvent): void {
+    private onMouseOver(): void {
         if (this.parcel === undefined) {
             return;
         }
@@ -36,7 +35,7 @@ export class ParcelInput extends Graphics {
         this.parcel.setHoverState(true);
     }
 
-    private onMouseLeave(interactionEvent: FederatedPointerEvent): void {
+    private onMouseLeave(): void {
         if (this.parcel === undefined) {
             return;
         }

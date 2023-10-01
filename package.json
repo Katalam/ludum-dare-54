@@ -1,9 +1,9 @@
 {
-  "name": "pixi-platformer-starter",
+  "name": "speedy-deliveries-game-ld54",
   "version": "0.1.0",
-  "description": "Starter code for a platformer using PixiJS",
+  "description": "Parcel moving game created in 72h for Ludum Dare 54 using PixiJS",
   "private": true,
-  "authors" : [
+  "authors": [
     "Lito 'Sinus' Goldmann",
     "Katalam"
   ],
