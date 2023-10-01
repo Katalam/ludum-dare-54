@@ -127,7 +127,7 @@ class Stage extends Graphics {
         this.parcelInput.despawnParcel();
 
         this.stacks.clearStacks();
-
+        this.scheduler.clearEntries();
         this.scoreboard.resetScore();
 
         this.activeDestinations = [Destination.getDestinationByIndex(0), Destination.getDestinationByIndex(1), Destination.getDestinationByIndex(2), Destination.getDestinationByIndex(3)];

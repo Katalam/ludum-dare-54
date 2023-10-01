@@ -167,5 +167,6 @@ export class Stacks extends Graphics {
                 this.removeChild(parcel);
             });
         });
+        this.parcelStacks = this.parcelStacks.map(() => []);
     }
 }

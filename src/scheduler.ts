@@ -69,6 +69,15 @@ export class Scheduler extends Graphics {
             item.y = Scheduler.OFFSET_Y + index * 40;
         });
     }
+
+    public clearEntries(): void {
+        this.entries.forEach((entry: Entry) => {
+            this.removeChild(entry);
+            entry.destroy();
+        });
+
+        this.entries = [];
+    }
 }
 
 class Entry extends Graphics {
