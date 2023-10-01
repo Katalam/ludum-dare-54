@@ -1,7 +1,8 @@
 import { Application, Graphics, Texture, TilingSprite } from "pixi.js"
 import { Clock } from "./clock";
 import { Scheduler } from "./scheduler";
-import { ParcelInput, Stacks } from "./stacks";
+import { Stacks } from "./stacks";
+import { ParcelInput } from "./input";
 import { Parcel } from "./parcel";
 import { Output } from "./output";
 import { ScoreBoard as Scoreboard } from "./scoreboard";

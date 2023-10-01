@@ -1,0 +1,66 @@
+import { Graphics, Texture, Sprite } from "pixi.js";
+import { Parcel } from "./parcel";
+
+export class ParcelInput extends Graphics {
+
+    public static readonly PARCEL_SPAWN_TIME = 2.0;
+
+    private parcelMovementProgression: number | undefined;
+    private parcel: Parcel | undefined;
+
+    constructor() {
+        super();
+
+        this.redraw();
+    }
+
+    public spawnParcel(parcel: Parcel) {
+        if (this.parcel !== undefined) {
+            throw new Error();
+        }
+
+        this.parcel = parcel;
+        this.parcel.x = -Parcel.PARCEL_WIDTH;
+        this.parcel.y = -Parcel.PARCEL_HEIGHT - 5;
+
+        this.parcelMovementProgression = 0.0;
+
+        this.addChild(this.parcel);
+    }
+
+    public hasParcel() {
+        return this.parcel !== undefined;
+    }
+
+    public despawnParcel() {
+        if (this.parcel === undefined) {
+            return
+        }
+
+        this.removeChild(this.parcel);
+
+        this.parcel = undefined;
+        this.parcelMovementProgression = undefined;
+    }
+
+    public update(delta: number): void {
+        if (this.parcel !== undefined && this.parcelMovementProgression !== undefined && this.parcelMovementProgression < 1.0) {
+            this.parcelMovementProgression = Math.min(1.0, this.parcelMovementProgression + delta * (1 / ParcelInput.PARCEL_SPAWN_TIME));
+            this.parcel.x = -Parcel.PARCEL_WIDTH + this.parcelMovementProgression * (40 + Parcel.PARCEL_WIDTH);
+        }
+    }
+
+    private redraw(): void {
+        this.clear();
+
+        const texture = Texture.from("assets/conveyable.png");
+        const sprite = new Sprite(texture);
+
+        sprite.x = -50;
+        sprite.width = Parcel.PARCEL_WIDTH + 110;
+        sprite.height = 40;
+
+        this.addChild(sprite);
+    }
+
+}
