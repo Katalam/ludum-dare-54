@@ -62,7 +62,9 @@ export class Parcel extends ColoredShape<Rectangle> {
     }
 
     private onMouseOver(interactionEvent: FederatedPointerEvent): void {
-        this.border!.alpha = 1.0;
+        if (this.onTopOfStack || this.location === undefined) {
+            this.border!.alpha = 1.0;
+        }
     }
 
     private onMouseLeave(interactionEvent: FederatedPointerEvent): void {
