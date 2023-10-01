@@ -103,7 +103,7 @@ class Entry extends Graphics {
         this.endFill();
 
         this.textTime = new Text(this.getTextForClock(), {
-            fontFamily: "Arial",
+            fontFamily: "Courier New",
             fontSize: Entry.HEIGHT,
             fill: 0xffffff,
             align: "center",
@@ -113,7 +113,7 @@ class Entry extends Graphics {
         this.textTime.y = 4;
 
         const textDestination = new Text(this.destination.getName(), {
-            fontFamily: "Arial",
+            fontFamily: "Courier New",
             fontSize: Entry.HEIGHT,
             fill: 0xffffff,
             align: "center",
@@ -123,7 +123,7 @@ class Entry extends Graphics {
         textDestination.y = 4;
 
         const textDestinationShort = new Text(this.destination.destination, {
-            fontFamily: "Arial",
+            fontFamily: "Courier New",
             fontSize: Entry.HEIGHT,
             fill: 0xffffff,
             align: "center",
