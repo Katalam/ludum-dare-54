@@ -14,7 +14,7 @@ export class Sounds {
     private static playSound(sound: string) {
         const audio = new Audio(sound);
         audio.addEventListener('canplaythrough', () => {
-            audio.play();
+            void audio.play();
         })
     }
 }
