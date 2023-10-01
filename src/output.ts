@@ -1,6 +1,7 @@
 import { Destination } from './destination';
 import { Graphics, Sprite, Text, Texture } from 'pixi.js';
 import { Parcel } from './parcel';
+import { Sounds } from './sounds';
 
 export class Output extends Graphics {
 
@@ -75,7 +76,7 @@ export class Output extends Graphics {
             this.timeUntilDeparture -= secondsPast;
         }
 
-        if (this.timeUntilDeparture <= 0.0) {
+        if (this.timeUntilDeparture <= 0.0 && this.destination !== undefined) {
             this.clearDestination();
         } else {
             this.redraw();
@@ -83,6 +84,7 @@ export class Output extends Graphics {
     }
 
     public clearDestination(): void {
+        Sounds.playSoundTruckExit();
         this.destination = undefined;
         this.cursor = "initial";
         this.redraw();

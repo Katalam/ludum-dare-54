@@ -1,6 +1,7 @@
 import { Graphics, Text } from "pixi.js";
 import { Destination } from "./destination";
 import { Output } from "./output";
+import { Sounds } from "./sounds";
 
 export type TimeReachedListener = (destination: Destination) => void;
 
@@ -59,6 +60,8 @@ export class Scheduler extends Graphics {
                 this.removeChild(entry);
                 this.timeReachedListener?.(entry.getDestination());
                 entry.destroy();
+
+                Sounds.playSoundSchedulerReady();
             }
         });
 

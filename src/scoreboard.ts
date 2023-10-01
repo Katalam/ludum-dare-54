@@ -1,4 +1,5 @@
 import { Graphics, Text, TextStyle } from "pixi.js";
+import { Sounds } from "./sounds";
 
 export class ScoreBoard extends Graphics {
 
@@ -36,6 +37,7 @@ export class ScoreBoard extends Graphics {
         this.score += points;
         this.textScore.text = this.scoreString();
         this.redraw();
+        Sounds.playSoundScore();
     }
 
     public setScore(score: number) {

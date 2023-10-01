@@ -8,6 +8,7 @@ import { Output } from "./output";
 import { ScoreBoard as Scoreboard } from "./scoreboard";
 import { Destination } from "./destination";
 import { Menu } from "./menu";
+import { Sounds } from "./sounds";
 
 let stage: Stage;
 export let gameState: "menu" | "running" | "gameover" = "menu";
