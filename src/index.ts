@@ -8,7 +8,6 @@ import { Output } from "./output";
 import { ScoreBoard as Scoreboard } from "./scoreboard";
 import { Destination } from "./destination";
 import { Menu } from "./menu";
-import { Sounds } from "./sounds";
 
 let stage: Stage;
 export let gameState: "menu" | "running" | "gameover" = "menu";
@@ -64,6 +63,8 @@ class Stage extends Graphics {
     private menu: Menu;
     private outputs: Output[] = [];
 
+    private background: TilingSprite | undefined;
+
     private selectedParcel: Parcel | undefined;
     private timeUntilNextParcelSpawn = 1.0;
 
@@ -74,10 +75,10 @@ class Stage extends Graphics {
 
         // Load the background image and create a sprite with it
         const backgroundTexture = Texture.from("assets/wallpaper.png");
-        const background = new TilingSprite(backgroundTexture, app.screen.width, app.screen.height);
+        this.background = new TilingSprite(backgroundTexture, app.screen.width, app.screen.height);
 
         // Add the background to the stage
-        app.stage.addChild(background);
+        app.stage.addChild(this.background);
 
         this.menu = new Menu(() => this.restart());
         this.addChild(this.menu);
@@ -208,6 +209,8 @@ class Stage extends Graphics {
 
     public update(delta: number) {
         this.layoutChilds();
+        this.background!.width = app.screen.width;
+        this.background!.height = app.screen.height;
 
         if (gameState === "running") {
             this.parcelInput.update(delta);
