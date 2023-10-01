@@ -63,7 +63,7 @@ export class Destination {
             case 'ROM':
                 return 'Rome';
             case 'LIS':
-                return 'Listbon';
+                return 'Lisbon';
             default:
                 return '';
         }
