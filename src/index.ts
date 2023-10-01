@@ -221,6 +221,7 @@ class Stage extends Graphics {
         }
 
         this.selectedParcel = parcel;
+        this.selectedParcel.setBorderSelectedVisible(true);
     }
 
     private onStackSelected(stackId: number) {
@@ -230,6 +231,7 @@ class Stage extends Graphics {
 
         this.despawnParcel(this.selectedParcel);
         this.stacks.placeParcelOnStack(this.selectedParcel, stackId);
+        this.selectedParcel.setBorderSelectedVisible(false);
         this.selectedParcel = undefined;
     }
 }

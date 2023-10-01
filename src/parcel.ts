@@ -14,6 +14,7 @@ export class Parcel extends ColoredShape<Rectangle> {
     private destination: Destination;
 
     private border: Sprite | undefined;
+    private borderSelected: Sprite | undefined;
 
     constructor(destination: Destination) {
         super(new Rectangle(0, 0, Parcel.PARCEL_WIDTH, Parcel.PARCEL_HEIGHT), destination.getColor());
@@ -24,12 +25,29 @@ export class Parcel extends ColoredShape<Rectangle> {
 
         this.on("pointerdown", (interactionEvent: FederatedPointerEvent) => this.onPointerDown(interactionEvent));
 
+        this.addBorderSelected();
+
         this.addBorder();
         this.on("mouseover", (interactionEvent: FederatedPointerEvent) => this.onMouseOver(interactionEvent));
         this.on("mouseleave", (interactionEvent: FederatedPointerEvent) => this.onMouseLeave(interactionEvent));
 
         this.addBadge();
         this.drawText();
+    }
+
+    private addBorderSelected(): void {
+        this.borderSelected = new Sprite(Texture.WHITE);
+        this.borderSelected.width = Parcel.PARCEL_WIDTH + 4;
+        this.borderSelected.height = Parcel.PARCEL_HEIGHT + 4;
+        this.borderSelected.x = -2;
+        this.borderSelected.y = -2;
+        this.borderSelected.tint = 0xb530dd;
+        this.borderSelected.alpha = 0.0;
+        this.addChild(this.borderSelected);
+    }
+
+    public setBorderSelectedVisible(visible: boolean): void {
+        this.borderSelected!.alpha = visible ? 1.0 : 0.0;
     }
     
     private addBorder(): void {
