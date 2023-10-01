@@ -203,6 +203,7 @@ class Stage extends Graphics {
             output.x = app.screen.width - Parcel.PARCEL_WIDTH - 60;
             output.y = app.screen.height - 50 - index * (Parcel.PARCEL_HEIGHT + 150);
         })
+        this.menu.resize();
     }
 
     public update(delta: number) {

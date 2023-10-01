@@ -40,6 +40,8 @@ export class Menu extends Container {
     private startButtonHover = false;
     private howToButtonHover = false;
 
+    private displayState: "menu" | "lost" | "howto" = "menu";
+
     constructor(onRestartGameListener: () => void) {
         super();
 
@@ -88,9 +90,9 @@ export class Menu extends Container {
         });
         this.addChild(this.howToButton);
 
-        this.titleText = new Text("Parcel Clicker:\nSpeedy Delivieres", Menu.TITLE_STYLE);
+        this.titleText = new Text("Speedy Deliveries", Menu.TITLE_STYLE);
         this.titleText.x = app.screen.width / 2 - this.titleText.width / 2;
-        this.titleText.y = 30;
+        this.titleText.y = 40;
         this.addChild(this.titleText);
 
         this.startText = new Text("Start Game", Menu.BUTTON_STYLE);
@@ -105,19 +107,20 @@ export class Menu extends Container {
 
         this.infoText = new Text("A game made in 72 hours for Ludum Dare 54", Menu.TEXT_STYLE);
         this.infoText.x = app.screen.width / 2 - this.infoText.width / 2;
-        this.infoText.y = app.screen.height - 80;
+        this.infoText.y = app.screen.height - 160;
         this.addChild(this.infoText);
 
         this.redraw();
     }
 
     public displayLost(score: number) {
+        this.displayState = "lost";
         this.howToButton.visible = false;
         this.howToText.visible = false;
 
         this.infoText.text = `You delivered ${score} parcels!`
         this.infoText.x = app.screen.width / 2 - this.infoText.width / 2;
-        this.infoText.y = 275;
+        this.infoText.y = 180;
 
         this.startText.text = "Restart";
         this.startText.x = app.screen.width / 2 - this.startText.width / 2;
@@ -125,14 +128,15 @@ export class Menu extends Container {
 
         this.titleText.text = "Shift Done"
         this.titleText.x = app.screen.width / 2 - this.titleText.width / 2;
-        this.titleText.y = 30;
+        this.titleText.y = 80;
 
         this.redraw();
     }
 
     public displayHowTo() {
-        this.infoText.text = "Sort the incoming parcels and deliver them to the correct output.\n\n" +
-            "Earn points by delivering parcels to the correct output while it is active.\n\n" +
+        this.displayState = "howto";
+        this.infoText.text = "Pick up the the incoming parcels and stack\nthem in the middle. When a destination becomes\navailable, " +
+            "deliver the parcels to earn points.\n\n" +
             "Controls: Click (or touch) a parcel to select it.\nThen click on a destination to move the parcel."
         this.infoText.x = app.screen.width / 2 - this.infoText.width / 2;
         this.infoText.y = app.screen.height / 4;
@@ -174,5 +178,22 @@ export class Menu extends Container {
             30
         );
         this.howToButton.endFill();
+    }
+
+    public resize() {
+        this.titleText.x = app.screen.width / 2 - this.titleText.width / 2;
+        this.startText.x = app.screen.width / 2 - this.startText.width / 2;
+        this.howToText.x = app.screen.width / 2 - this.howToText.width / 2;
+        this.infoText.x = app.screen.width / 2 - this.infoText.width / 2;
+        if (this.displayState === "menu") {
+            this.infoText.y = app.screen.height - 160; // 
+        } else if (this.displayState === "lost") {
+            this.startText.y = app.screen.height / 2;
+        } else if (this.displayState === "howto") {
+            this.startText.y = app.screen.height - 180;
+            this.infoText.y = app.screen.height / 4;
+        }
+
+        this.redraw();
     }
 }
