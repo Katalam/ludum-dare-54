@@ -21,9 +21,8 @@ export class Scheduler extends Graphics {
         super();
 
         this.clear();
-        this.beginFill(0x000000);
-        this.drawRoundedRect(-2, -2, Scheduler.WIDTH + 4, Scheduler.HEIGHT + 5, 10);
         this.beginFill(Scheduler.RECTANGLE_COLOR);
+        this.lineStyle(2, 0x000000);
         this.drawRoundedRect(0, 0, Scheduler.WIDTH, Scheduler.HEIGHT, 10);
         this.endFill();
 
