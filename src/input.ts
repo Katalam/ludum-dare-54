@@ -1,4 +1,4 @@
-import { Graphics, Texture, Sprite } from "pixi.js";
+import { Graphics, Texture, Sprite, FederatedPointerEvent } from "pixi.js";
 import { Parcel } from "./parcel";
 
 export class ParcelInput extends Graphics {
@@ -8,10 +8,40 @@ export class ParcelInput extends Graphics {
     private parcelMovementProgression: number | undefined;
     private parcel: Parcel | undefined;
 
+    private onParcelInputSelectListener: ((parcelInput: ParcelInput) => void) | undefined;
+
     constructor() {
         super();
 
         this.redraw();
+
+        this.eventMode = 'static';
+        this.cursor = 'pointer';
+
+        this.on("mouseover", (interactionEvent: FederatedPointerEvent) => this.onMouseOver(interactionEvent));
+        this.on("mouseleave", (interactionEvent: FederatedPointerEvent) => this.onMouseLeave(interactionEvent));
+
+        this.on("pointerdown", (interactionEvent: FederatedPointerEvent) => this.onParcelInputSelectListener?.(this));
+    }
+
+    public setOnParcelInputSelectListener(listener: (parcelInput: ParcelInput) => void): void {
+        this.onParcelInputSelectListener = listener;
+    }
+
+    private onMouseOver(interactionEvent: FederatedPointerEvent): void {
+        if (this.parcel === undefined) {
+            return;
+        }
+
+        this.parcel.setHoverState(true);
+    }
+
+    private onMouseLeave(interactionEvent: FederatedPointerEvent): void {
+        if (this.parcel === undefined) {
+            return;
+        }
+
+        this.parcel.setHoverState(false);
     }
 
     public spawnParcel(parcel: Parcel) {
@@ -30,6 +60,10 @@ export class ParcelInput extends Graphics {
 
     public hasParcel() {
         return this.parcel !== undefined;
+    }
+
+    public getParcel(): Parcel | undefined {
+        return this.parcel;
     }
 
     public despawnParcel() {

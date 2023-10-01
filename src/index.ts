@@ -108,6 +108,8 @@ class Stage extends Graphics {
         this.layoutChilds();
 
         this.sortChildren();
+
+        this.parcelInput.setOnParcelInputSelectListener((parcelInput: ParcelInput) => this.onParcelInputSelected(parcelInput));
     }
 
     private restart(): void {
@@ -243,6 +245,14 @@ class Stage extends Graphics {
                 gameState = "gameover";
             }
         }
+    }
+
+    private onParcelInputSelected(parcelInput: ParcelInput): void {
+        if (!parcelInput.hasParcel()) {
+            return;
+        }
+
+        this.onParcelSelected(parcelInput.getParcel()!);
     }
 
     private onParcelSelected(parcel: Parcel) {

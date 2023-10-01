@@ -50,6 +50,10 @@ export class Parcel extends ColoredShape<Rectangle> {
         this.borderSelected!.alpha = visible ? 1.0 : 0.0;
     }
 
+    public setHoverState(isHovered: boolean): void {
+        this.border!.alpha = isHovered ? 1.0 : 0.0;
+    }
+
     private addBorder(): void {
         this.border = new Sprite(Texture.WHITE);
         this.border.width = Parcel.PARCEL_WIDTH + 2;
