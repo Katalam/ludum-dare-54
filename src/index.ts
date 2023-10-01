@@ -226,6 +226,9 @@ class Stage extends Graphics {
 
     private onStackSelected(stackId: number) {
         if (this.selectedParcel === undefined) {
+            this.selectedParcel = this.stacks.getParcelOnTopOfStack(stackId);
+            this.selectedParcel?.setBorderSelectedVisible(true);
+
             return;
         }
 

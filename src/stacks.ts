@@ -150,4 +150,14 @@ export class Stacks extends Graphics {
     public setOnSelectListener(listener: OnStackSelectListener): void {
         this.onStackSelectListener = listener;
     }
+
+    public getParcelOnTopOfStack(stackId: number): Parcel | undefined {
+        if (stackId < 0 || stackId >= Stacks.STACKS) {
+            throw new RangeError();
+        }
+
+        const parcelStack = this.parcelStacks[stackId]!;
+
+        return parcelStack.filter(parcel => parcel.isOnTopOfStack())[0];
+    }
 }
