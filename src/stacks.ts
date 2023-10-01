@@ -1,5 +1,4 @@
-import { FederatedPointerEvent, Graphics, Rectangle } from "pixi.js";
-import { ColoredShape } from "./shape";
+import { DisplayObject, FederatedPointerEvent, Graphics, Sprite, Texture } from "pixi.js";
 import { Parcel } from "./parcel";
 
 export type OnStackSelectListener = (stackId: number) => void;
@@ -12,7 +11,7 @@ export class Stacks extends Graphics {
 
     private parcelStacks: Parcel[][];
 
-    private stacks: ColoredShape<Rectangle>[];
+    private stacks: DisplayObject[];
 
     private onStackSelectListener: OnStackSelectListener | undefined;
     private onStackHoverListener: OnStackHoverListener | undefined;
@@ -28,7 +27,11 @@ export class Stacks extends Graphics {
 
         this.stacks = [];
         for (let i = 0; i < Stacks.STACKS; i++) {
-            const stack = new ColoredShape<Rectangle>(new Rectangle(i * (Stacks.STACK_WIDTH + 20), 0, Stacks.STACK_WIDTH, 40), 0xFF000);
+            const stack = new Sprite(Texture.from("assets/stack.png"));
+            stack.x = i * (Stacks.STACK_WIDTH + 20);
+            stack.width = Stacks.STACK_WIDTH;
+            stack.height = 60;
+            // const stack = new ColoredShape<Rectangle>(new Rectangle(, 0, Stacks.STACK_WIDTH, 40), 0xFF000);
             stack.on("pointerdown", (interactionEvent: FederatedPointerEvent) => this.onPointerDown(interactionEvent, i));
             stack.on("mouseover", (interactionEvent: FederatedPointerEvent) => this.onMouseOver(interactionEvent, i));
             stack.on("mouseleave", (interactionEvent: FederatedPointerEvent) => this.onMouseLeave(interactionEvent, i));
@@ -75,8 +78,8 @@ export class Stacks extends Graphics {
         parcel.setLocation(stackId);
         parcel.setOnTopOfStack(true);
 
-        parcel.x = stackId * (Stacks.STACK_WIDTH + 20) + 15;
-        parcel.y = this.parcelStacks[stackId]!.length * (-Parcel.PARCEL_HEIGHT - 5)
+        parcel.x = stackId * (Stacks.STACK_WIDTH + 20) + 30;
+        parcel.y = this.parcelStacks[stackId]!.length * (-Parcel.PARCEL_HEIGHT - 5) + 10
     }
 
     public removeParcelFromStack(stackId: number) {

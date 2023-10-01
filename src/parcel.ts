@@ -4,7 +4,7 @@ import { Destination } from "./destination";
 
 export class Parcel extends ColoredShape<Rectangle> {
 
-    public static readonly PARCEL_WIDTH = 80;
+    public static readonly PARCEL_WIDTH = 120;
     public static readonly PARCEL_HEIGHT = 48;
 
     private onParcelSelectListener: ((parcel: Parcel) => void) | undefined;
@@ -21,15 +21,14 @@ export class Parcel extends ColoredShape<Rectangle> {
         this.destination = destination;
         this.eventMode = 'static';
         this.cursor = 'pointer';
-        // this.lineStyle(2, 0x000000);
 
         this.on("pointerdown", (interactionEvent: FederatedPointerEvent) => this.onPointerDown(interactionEvent));
 
         this.addBorderSelected();
 
         this.addBorder();
-        this.on("mouseover", (interactionEvent: FederatedPointerEvent) => this.onMouseOver(interactionEvent));
-        this.on("mouseleave", (interactionEvent: FederatedPointerEvent) => this.onMouseLeave(interactionEvent));
+        this.on("mouseover", () => this.onMouseOver());
+        this.on("mouseleave", () => this.onMouseLeave());
 
         this.addBadge();
         this.drawText();
@@ -65,13 +64,13 @@ export class Parcel extends ColoredShape<Rectangle> {
         this.addChild(this.border);
     }
 
-    private onMouseOver(interactionEvent: FederatedPointerEvent): void {
+    private onMouseOver(): void {
         if (this.onTopOfStack || this.location === undefined) {
             this.border!.alpha = 1.0;
         }
     }
 
-    private onMouseLeave(interactionEvent: FederatedPointerEvent): void {
+    private onMouseLeave(): void {
         this.border!.alpha = 0.0;
     }
 
