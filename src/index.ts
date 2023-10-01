@@ -83,6 +83,8 @@ class Stage extends Graphics {
 
         this.stacks = new Stacks();
         this.stacks.setOnSelectListener((stackId: number) => this.onStackSelected(stackId));
+        this.stacks.setOnHoverListener((stackId: number) => this.onStackHovered(stackId));
+        this.stacks.setOnHoverAwayListener((stackId: number) => this.onStackHoveredAway(stackId));
         this.addChild(this.stacks);
 
         this.parcelInput = new ParcelInput();
@@ -280,6 +282,20 @@ class Stage extends Graphics {
         this.stacks.placeParcelOnStack(this.selectedParcel, stackId);
         this.selectedParcel.setBorderSelectedVisible(false);
         this.selectedParcel = undefined;
+    }
+
+    private onStackHovered(stackId: number) {
+        if (this.selectedParcel === undefined) {
+            const parcel = this.stacks.getParcelOnTopOfStack(stackId);
+            parcel?.setHoverState(true);
+
+            return;
+        }
+    }
+
+    private onStackHoveredAway(stackId: number) {
+        const parcel = this.stacks.getParcelOnTopOfStack(stackId);
+        parcel?.setHoverState(false);
     }
 }
 

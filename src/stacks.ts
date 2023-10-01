@@ -3,6 +3,7 @@ import { ColoredShape } from "./shape";
 import { Parcel } from "./parcel";
 
 export type OnStackSelectListener = (stackId: number) => void;
+export type OnStackHoverListener = (stackId: number) => void;
 
 export class Stacks extends Graphics {
 
@@ -14,6 +15,8 @@ export class Stacks extends Graphics {
     private stacks: ColoredShape<Rectangle>[];
 
     private onStackSelectListener: OnStackSelectListener | undefined;
+    private onStackHoverListener: OnStackHoverListener | undefined;
+    private onStackHoverAwayListener: OnStackHoverListener | undefined;
 
     constructor() {
         super();
@@ -27,6 +30,8 @@ export class Stacks extends Graphics {
         for (let i = 0; i < Stacks.STACKS; i++) {
             const stack = new ColoredShape<Rectangle>(new Rectangle(i * (Stacks.STACK_WIDTH + 20), 0, Stacks.STACK_WIDTH, 40), 0xFF000);
             stack.on("pointerdown", (interactionEvent: FederatedPointerEvent) => this.onPointerDown(interactionEvent, i));
+            stack.on("mouseover", (interactionEvent: FederatedPointerEvent) => this.onMouseOver(interactionEvent, i));
+            stack.on("mouseleave", (interactionEvent: FederatedPointerEvent) => this.onMouseLeave(interactionEvent, i));
             this.stacks.push(stack);
             this.addChild(stack);
         }
@@ -46,6 +51,14 @@ export class Stacks extends Graphics {
         }
 
         this.onStackSelectListener?.(stackId);
+    }
+
+    private onMouseOver(interactionEvent: FederatedPointerEvent, stackId: number) {
+        this.onStackHoverListener?.(stackId);
+    }
+
+    private onMouseLeave(interactionEvent: FederatedPointerEvent, stackId: number) {
+        this.onStackHoverAwayListener?.(stackId);
     }
 
     public placeParcelOnStack(parcel: Parcel, stackId: number): void {
@@ -85,6 +98,14 @@ export class Stacks extends Graphics {
 
     public setOnSelectListener(listener: OnStackSelectListener): void {
         this.onStackSelectListener = listener;
+    }
+
+    public setOnHoverListener(listener: OnStackHoverListener): void {
+        this.onStackHoverListener = listener;
+    }
+
+    public setOnHoverAwayListener(listener: OnStackHoverListener): void {
+        this.onStackHoverAwayListener = listener;
     }
 
     public getParcelOnTopOfStack(stackId: number): Parcel | undefined {
