@@ -60,10 +60,15 @@ export class Clock extends Graphics {
         const minutes = Math.floor(this.time / 60);
         const seconds = this.time - (minutes * 60);
 
+
         // Blink the character every other second
         if (this.lastBlinkTime - this.time > 1) {
             this.lastBlinkTime = this.time;
             this.blinkCharacter = this.blinkCharacter === " " ? ":" : " ";
+        }
+
+        if (seconds.toFixed(0).toString() === '60') {
+            return `${minutes + 1}${this.blinkCharacter}00`;
         }
 
         return `${minutes}${this.blinkCharacter}${seconds.toFixed(0).toString().padStart(2, '0')}`;
