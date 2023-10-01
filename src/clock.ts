@@ -17,8 +17,7 @@ export class Clock extends Graphics {
         this.time = deadline;
         this.lastBlinkTime = deadline;
 
-        this.beginFill(0x000000);
-        this.drawRoundedRect(-2, 8, Clock.WIDTH + 4, Clock.HEIGHT + 4, 10);
+        this.lineStyle(2, 0x000000);
         this.beginFill(Clock.RECTANGLE_COLOR);
         this.drawRoundedRect(0, 10, Clock.WIDTH, Clock.HEIGHT, 10);
         this.endFill();
