@@ -12,7 +12,7 @@ export class Scheduler extends Graphics {
     private static readonly OFFSET_Y: number = 10;
     private static readonly RECTANGLE_COLOR: number = 0x1A00BD;
 
-    public static readonly MIN_VALUE_NEXT_TIME: number = Output.EXIT_TIME_IN_SECONDS + 2;
+    public static readonly MIN_VALUE_NEXT_TIME: number = Output.EXIT_TIME_IN_SECONDS / 2 + 1;
     public static readonly ADD_VALUE_NEXT_TIME: number = 5;
 
     private entries: Array<Entry> = [];

@@ -51,9 +51,9 @@ class Stage extends Graphics {
 
     private static readonly PARCEL_SPAWN_TIME = 2.0;
     private static readonly MAX_SCHEDULED_OUTPUT_TASKS = 3;
-    private static readonly DEADLINE = 2 * 60;
-    private static readonly ACTIVATE_NEW_DESTINATIONS_AFTER = Stage.DEADLINE / 3;
-    private static readonly AMOUNT_OF_OUTPUTS = 1;
+    private static readonly DEADLINE = 3 * 60;
+    private static readonly ACTIVATE_NEW_DESTINATIONS_AFTER = 30;
+    private static readonly AMOUNT_OF_OUTPUTS = 2;
 
     private parcelInput: ParcelInput;
     private stacks: Stacks;
@@ -137,8 +137,8 @@ class Stage extends Graphics {
         this.scheduler.clearEntries();
         this.scoreboard.resetScore();
 
-        this.activeDestinations = [Destination.getDestinationByIndex(0), Destination.getDestinationByIndex(1), Destination.getDestinationByIndex(2), Destination.getDestinationByIndex(3)];
-        this.scheduler.addEntry(5, Destination.getRandomDestination(4));
+        this.activeDestinations = [Destination.getDestinationByIndex(0), Destination.getDestinationByIndex(1), Destination.getDestinationByIndex(2), Destination.getDestinationByIndex(3), Destination.getDestinationByIndex(4)];
+        this.scheduler.addEntry(5, Destination.getRandomDestination(5));
     }
 
     private spawnOutputs() {
@@ -218,10 +218,12 @@ class Stage extends Graphics {
             this.scheduler.update(delta);
             this.outputs.forEach((output) => output.update(delta));
 
-            if (this.clock.getTimeLeft() < Stage.DEADLINE - Stage.ACTIVATE_NEW_DESTINATIONS_AFTER && this.activeDestinations.length < 5) {
-                this.activeDestinations.push(Destination.getDestinationByIndex(4));
-            } else if (this.clock.getTimeLeft() < Stage.DEADLINE - 2 * Stage.ACTIVATE_NEW_DESTINATIONS_AFTER && this.activeDestinations.length < 6) {
+            if (this.clock.getTimeLeft() < Stage.DEADLINE - Stage.ACTIVATE_NEW_DESTINATIONS_AFTER && this.activeDestinations.length < 6) {
                 this.activeDestinations.push(Destination.getDestinationByIndex(5));
+            } else if (this.clock.getTimeLeft() < Stage.DEADLINE - 2 * Stage.ACTIVATE_NEW_DESTINATIONS_AFTER && this.activeDestinations.length < 7) {
+                this.activeDestinations.push(Destination.getDestinationByIndex(6));
+            } else if (this.clock.getTimeLeft() < Stage.DEADLINE - 3 * Stage.ACTIVATE_NEW_DESTINATIONS_AFTER && this.activeDestinations.length < 8) {
+                this.activeDestinations.push(Destination.getDestinationByIndex(7));
             }
 
             this.timeUntilNextParcelSpawn -= delta;
