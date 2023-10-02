@@ -97,12 +97,12 @@ export class Menu extends Container {
 
         this.startText = new Text("Start Game", Menu.BUTTON_STYLE);
         this.startText.x = app.screen.width / 2 - this.startText.width / 2;
-        this.startText.y = 275;
+        this.startText.y = app.screen.height / 3 - 50;
         this.addChild(this.startText);
 
         this.howToText = new Text("How To Play", Menu.BUTTON_STYLE);
         this.howToText.x = app.screen.width / 2 - this.howToText.width / 2;
-        this.howToText.y = 525;
+        this.howToText.y = 2 * app.screen.height / 3 - 100;
         this.addChild(this.howToText);
 
         this.infoText = new Text("A game made in 72 hours for Ludum Dare 54", Menu.TEXT_STYLE);
@@ -186,7 +186,9 @@ export class Menu extends Container {
         this.howToText.x = app.screen.width / 2 - this.howToText.width / 2;
         this.infoText.x = app.screen.width / 2 - this.infoText.width / 2;
         if (this.displayState === "menu") {
-            this.infoText.y = app.screen.height - 160; // 
+            this.infoText.y = app.screen.height - 160;
+            this.howToText.y = 2 * app.screen.height / 3 - 100;
+            this.startText.y = app.screen.height / 3 - 50;
         } else if (this.displayState === "lost") {
             this.startText.y = app.screen.height / 2;
         } else if (this.displayState === "howto") {
