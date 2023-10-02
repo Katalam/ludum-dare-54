@@ -259,6 +259,10 @@ class Stage extends Graphics {
     }
 
     private onParcelInputSelected(parcelInput: ParcelInput): void {
+        if (gameState !== "running") {
+            return;
+        }
+
         if (!parcelInput.hasParcel()) {
             return;
         }
@@ -267,6 +271,10 @@ class Stage extends Graphics {
     }
 
     private onParcelSelected(parcel: Parcel) {
+        if (gameState !== "running") {
+            return;
+        }
+
         if (typeof (parcel.getLocation()) === "number" && !parcel.isOnTopOfStack()) {
             return;
         }
@@ -280,6 +288,10 @@ class Stage extends Graphics {
     }
 
     private onStackSelected(stackId: number) {
+        if (gameState !== "running") {
+            return;
+        }
+
         if (this.selectedParcel === undefined) {
             this.selectedParcel = this.stacks.getParcelOnTopOfStack(stackId);
             this.selectedParcel?.setBorderSelectedVisible(true);
@@ -294,6 +306,10 @@ class Stage extends Graphics {
     }
 
     private onStackHovered(stackId: number) {
+        if (gameState !== "running") {
+            return;
+        }
+
         if (this.selectedParcel === undefined) {
             const parcel = this.stacks.getParcelOnTopOfStack(stackId);
             parcel?.setHoverState(true);
