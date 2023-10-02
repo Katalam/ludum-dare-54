@@ -83,8 +83,11 @@ export class Output extends Graphics {
         }
     }
 
-    public clearDestination(): void {
-        Sounds.playSoundTruckExit();
+    public clearDestination(playSound: boolean = true): void {
+        if (playSound) {
+            Sounds.playSoundTruckExit();
+        }
+
         this.destination = undefined;
         this.cursor = "initial";
         this.redraw();

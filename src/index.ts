@@ -8,6 +8,7 @@ import { Output } from "./output";
 import { ScoreBoard as Scoreboard } from "./scoreboard";
 import { Destination } from "./destination";
 import { Menu } from "./menu";
+import { Sounds } from "./sounds";
 
 let stage: Stage;
 export let gameState: "menu" | "running" | "gameover" = "menu";
@@ -127,8 +128,9 @@ class Stage extends Graphics {
         this.stacks.setInteractive(true);
         this.outputs.forEach(output => {
             output.setInteractive(true);
-            output.clearDestination();
+            output.clearDestination(false);
         });
+        Sounds.playSoundScore();
 
         this.clock.setDeadline(Stage.DEADLINE);
         this.parcelInput.despawnParcel();
